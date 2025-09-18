@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: postgres_database_container
+    image: postgres:13
+    environment:
+      POSTGRES_USER: magerit_user
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: magerit_db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  pgAdmin:
+    container_name: pgAdmin_container
+    image: dpage/pgadmin4:6.17
+    depends_on:
+      - db
+    environment:
+      PGADMIN_DEFAULT_EMAIL: dev.andres.gutierrez@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: 123456
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+volumes:
+  db_data:
+  pgadmin_data:
