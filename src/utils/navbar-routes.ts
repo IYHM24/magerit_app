@@ -4,7 +4,7 @@ type NavbarLink = {
 };
 
 export const navbarLinks: NavbarLink[] = [
-  { label: "Inicio", href: "#" },
+  { label: "Activos", href: "#" },
   { label: "Servicios", href: "#" },
   { label: "Contacto", href: "#" },
 ];
