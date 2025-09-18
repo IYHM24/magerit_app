@@ -5,9 +5,9 @@ services:
     container_name: postgres_database_container
     image: postgres:13
     environment:
-      POSTGRES_USER: magerit_user
-      POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: magerit_db
+      POSTGRES_USER: {DATABASE_USER}
+      POSTGRES_PASSWORD: {DATABASE_PASSWORD}
+      POSTGRES_DB: {DATABASE_NAME}
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
@@ -19,8 +19,8 @@ services:
     depends_on:
       - db
     environment:
-      PGADMIN_DEFAULT_EMAIL: dev.andres.gutierrez@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: 123456
+      PGADMIN_DEFAULT_EMAIL: {PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: {PGADMIN_DEFAULT_PASSWORD}
     ports:
       - "8080:80"
     volumes:
