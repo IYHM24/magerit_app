@@ -1,5 +1,6 @@
 export type mapPage = {
-    name: string;
     label: string;
+    href: string;
+    component: React.ComponentType;
     disabled?: boolean;
 }
