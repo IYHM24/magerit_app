@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/ui/Navbar";
+import { Footer } from "@/components/ui/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,12 +39,14 @@ export default function RootLayout({
         <title>Magerit</title>
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} font-sans antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} font-sans antialiased bg-zinc-100 dark:bg-zinc-900 min-h-screen flex flex-col`}
+        style={{ minHeight: "100vh", overflowX: "hidden" }}
       >
-        <header>
-          <Navbar />
-        </header>
-        {children}
+        <Navbar />
+        <main>
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );
