@@ -35,11 +35,15 @@ const ModernTable: React.FC<ModernTableProps> = ({
   onChange,
   onCreate,
 }) => {
-  const [tableData, setTableData] = useState<TableRowData[]>(data);
+  const [tableData, setTableData] = useState<TableRowData[]>([]);
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: "asc" | "desc" } | null>(null);
 
+  React.useEffect(() => {
+    setTableData(data);
+  }, [data]);
+
   const sortedData = React.useMemo(() => {
-    const withIdx = tableData.map((row, idx) => ({ ...row, _originalIdx: idx })) as (TableRowData & { _originalIdx: number })[];
+    const withIdx = tableData?.map((row, idx) => ({ ...row, _originalIdx: idx })) as (TableRowData & { _originalIdx: number })[];
     if (!sortConfig) return withIdx;
     return withIdx.sort((a, b) => {
       if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === "asc" ? -1 : 1;
@@ -50,7 +54,7 @@ const ModernTable: React.FC<ModernTableProps> = ({
 
   const handleEdit = (rowIdx: number, key: string, value: any) => {
     const originalIdx = sortedData[rowIdx]._originalIdx;
-    const newData = [...tableData];
+    const newData = [...(tableData || [])];
     newData[originalIdx][key] = value;
     setTableData(newData);
     onChange?.(newData);

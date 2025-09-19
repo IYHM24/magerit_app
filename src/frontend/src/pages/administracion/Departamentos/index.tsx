@@ -48,9 +48,11 @@ const Departamentos: React.FC = () => {
   };
 
   const handleCreate = () => {
+    debugger;
     const nextId = data.length ? Math.max(...data.map(d => d.id)) + 1 : 1;
-    setData([
-      ...data,
+    setData( prev =>
+      [
+      ...prev,
       { id: nextId, nombre: "Nuevo Departamento", activo: false },
     ]);
   };
