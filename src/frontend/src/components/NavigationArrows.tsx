@@ -1,0 +1,42 @@
+import React from "react";
+
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
+import { Link } from "react-router-dom";
+
+interface NavigationArrowsProps {
+    nextPath: string;
+    prevPath?: string;
+    nextText?: string;
+    prevText?: string;
+}
+
+const NavigationArrows: React.FC<NavigationArrowsProps> = ({ nextPath, prevPath, nextText, prevText }) => {
+
+
+    return (
+        <div className="flex gap-4 justify-center items-center mt-4">
+            {prevPath && (
+                <Link to={prevPath} className="flex items-center gap-2">
+                    <button
+                        className="bg-gray-200 hover:bg-gray-300 text-black rounded-full p-2 flex items-center gap-2"
+                        title="Anterior"
+                    >
+                        <FiArrowLeft size={24} />
+                    </button>
+                    {prevText}
+                </Link>
+            )}
+            <Link to={nextPath} className="flex items-center gap-2">
+                {nextText}
+                <button
+                    className="bg-lime-500 hover:bg-lime-600 text-white rounded-full p-2 flex items-center gap-2"
+                    title="Siguiente"
+                >
+                    <FiArrowRight size={24} />
+                </button>
+            </Link>
+        </div>
+    );
+};
+
+export default NavigationArrows;

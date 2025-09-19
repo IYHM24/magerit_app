@@ -10,6 +10,7 @@ import {
 type initialData = { id: number; nombre: string; activo: boolean };
 
 import type { TableColumn } from "@/components/ModernTable";
+import NavigationArrows from "@/components/NavigationArrows";
 
 const columns: TableColumn[] = [
   {
@@ -95,6 +96,12 @@ const Departamentos: React.FC = () => {
         onChange={handleChange}
         onCreate={handleCreate}
         onDelete={handleDelete}
+      />
+      <NavigationArrows
+        nextPath="/activos"
+        prevPath="/administracion"
+        nextText="Gestionar activos"
+        prevText="instrucciones"
       />
     </div>
   );
