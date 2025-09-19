@@ -3,4 +3,5 @@ export type mapPage = {
     href: string;
     component: React.ComponentType;
     disabled?: boolean;
+    subPages?: mapPage[];
 }

@@ -12,7 +12,7 @@ const Home: React.FC = () => {
           Plataforma para la gestión de riesgos, activos, amenazas y auditorías. Optimiza la seguridad de tu organización con herramientas modernas y visuales.
         </p>
         <a
-          href="/activos"
+          href="/#administracion"
           className="mt-4 px-8 py-4 rounded-full bg-green-500 text-white font-bold text-lg shadow-lg hover:bg-green-600 transition-all duration-300 animate-bounce"
         >
           Comenzar

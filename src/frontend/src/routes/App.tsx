@@ -9,8 +9,13 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          {pagesMap.map(({ href, component: Component }) => (
-            <Route key={href} path={href} element={<Component />} />
+          {pagesMap.map(({ href, component: Component, subPages }) => (
+            <>
+              <Route key={href} path={href} element={<Component />} />
+              {subPages && subPages.map(({ href: subHref, component: SubComponent }) => (
+                <Route key={subHref} path={subHref} element={<SubComponent />} />
+              ))}
+            </>
           ))}
         </Route>
       </Routes>
