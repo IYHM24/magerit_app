@@ -4,8 +4,10 @@ const path = require('path');
 
 function createWindow() {
   const win = new BrowserWindow({
-    width: 1024,
-    height: 768,
+    maximizable: true,      // Permite maximizar la ventana
+    resizable: true,
+    movable: true,   
+    frame: true,            // Muestra barra de título y botones
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
@@ -13,7 +15,16 @@ function createWindow() {
     }
   });
 
-  win.loadFile(path.join(__dirname, '../frontend/dist/index.html'));
+  win.maximize(); // Maximiza la ventana completamente
+
+  if (process.env.NODE_ENV === 'production') {
+    win.loadFile(path.join(__dirname, '../frontend/dist/index.html'));
+  } else {
+    win.loadURL('http://localhost:5174');
+  }
+
+  // Integrar lógica backend (API Prisma)
+  require('./api.js');
 }
 
 app.whenReady().then(() => {
