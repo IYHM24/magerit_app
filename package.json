@@ -5,9 +5,14 @@
     "sqlite3": "^5.1.7"
   },
   "scripts": {
+    "build:frontend": "cd src/frontend && npm install && npm run build",
     "electron": "electron src/backend/main.js"
   },
   "dependencies": {
-    "@prisma/client": "^6.16.2"
+    "@prisma/client": "^6.16.2",
+    "ts-node": "^10.9.2"
+  },
+  "prisma": {
+    "seed": "ts-node ./prisma/seed.ts"
   }
 }
