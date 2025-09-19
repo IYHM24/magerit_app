@@ -1,6 +1,6 @@
 // ModernTable.tsx usando shadcn/ui Table
 import React, { useState } from "react";
-import { FiEdit, FiTrash2, FiPlus } from "react-icons/fi";
+import { FiTrash2, FiPlus } from "react-icons/fi";
 import { Table, TableHeader, TableBody, TableRow, TableCell, TableHead, TableFooter } from "@/components/ui/table";
 
 export type ColumnType = "text" | "checkbox" | "select" | "number" | "currency";
