@@ -24,8 +24,9 @@ interface ModernTableProps {
   title: string;
   columns: TableColumn[];
   data: TableRowData[];
-  onChange?: (newData: TableRowData[]) => void;
+  onChange?: (newData: any) => void;
   onCreate?: () => void;
+  onDelete?: (id: number) => void;
 }
 
 const ModernTable: React.FC<ModernTableProps> = ({
@@ -34,6 +35,7 @@ const ModernTable: React.FC<ModernTableProps> = ({
   data,
   onChange,
   onCreate,
+  onDelete,
 }) => {
   const [tableData, setTableData] = useState<TableRowData[]>([]);
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: "asc" | "desc" } | null>(null);
@@ -57,7 +59,16 @@ const ModernTable: React.FC<ModernTableProps> = ({
     const newData = [...(tableData || [])];
     newData[originalIdx][key] = value;
     setTableData(newData);
-    onChange?.(newData);
+    onChange?.(newData[originalIdx]);
+  };
+
+  const handleDelete = (row: TableRowData & { _originalIdx: number }) => {
+    debugger
+    const originalIdx = row._originalIdx;
+    const newData = [...(tableData || [])];
+    newData.splice(originalIdx, 1);
+    setTableData(newData);
+    onDelete?.(row.id);
   };
 
   const handleCreate = () => {
@@ -130,15 +141,27 @@ const ModernTable: React.FC<ModernTableProps> = ({
                         type="checkbox"
                         checked={!!row[col.key]}
                         disabled={!col.editable}
-                        onChange={(e) =>
-                          col.editable && handleEdit(rowIdx, col.key, e.target.checked)
-                        }
+                        onChange={(e) => {
+                          if (!col.editable) return;
+                          const originalIdx = sortedData[rowIdx]._originalIdx;
+                          const newData = [...tableData];
+                          newData[originalIdx][col.key] = e.target.checked;
+                          setTableData(newData);
+                          handleEdit(rowIdx, col.key, e.target.checked);
+                        }}
                         className="form-checkbox h-5 w-5 text-lime-500"
                       />
                     ) : col.type === "select" && col.options ? (
                       <select
                         value={row[col.key]}
-                        onChange={(e) => handleEdit(rowIdx, col.key, e.target.value)}
+                        onChange={(e) => {
+                          if (!col.editable) return;
+                          const originalIdx = sortedData[rowIdx]._originalIdx;
+                          const newData = [...tableData];
+                          newData[originalIdx][col.key] = e.target.value;
+                          setTableData(newData);
+                          handleEdit(rowIdx, col.key, e.target.value);
+                        }}
                         disabled={!col.editable}
                         className="bg-gray-100 dark:bg-gray-800 text-black dark:text-white px-2 py-1 rounded w-full"
                       >
@@ -152,7 +175,21 @@ const ModernTable: React.FC<ModernTableProps> = ({
                       <input
                         type="number"
                         value={row[col.key]}
-                        onChange={(e) => handleEdit(rowIdx, col.key, Number(e.target.value))}
+                        onChange={(e) => {
+                          const value = Number(e.target.value);
+                          const originalIdx = sortedData[rowIdx]._originalIdx;
+                          const newData = [...tableData];
+                          newData[originalIdx][col.key] = value;
+                          setTableData(newData);
+                        }}
+                        onBlur={(e) => {
+                          const value = Number(e.target.value);
+                          const originalIdx = sortedData[rowIdx]._originalIdx;
+                          const newData = [...tableData];
+                          newData[originalIdx][col.key] = value;
+                          setTableData(newData);
+                          handleEdit(rowIdx, col.key, value);
+                        }}
                         className="bg-gray-100 dark:bg-gray-800 text-black dark:text-white px-2 py-1 rounded w-full"
                       />
                     ) : col.type === "currency" && col.editable ? (
@@ -175,7 +212,14 @@ const ModernTable: React.FC<ModernTableProps> = ({
                       <input
                         type="text"
                         value={row[col.key] ?? ""}
-                        onChange={(e) => handleEdit(rowIdx, col.key, e.target.value)}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          const originalIdx = sortedData[rowIdx]._originalIdx;
+                          const newData = [...tableData];
+                          newData[originalIdx][col.key] = value;
+                          setTableData(newData);
+                          handleEdit(rowIdx, col.key, value);
+                        }}
                         className="bg-gray-100 dark:bg-gray-800 text-black dark:text-white px-2 py-1 rounded w-full"
                       />
                     ) : (
@@ -184,7 +228,11 @@ const ModernTable: React.FC<ModernTableProps> = ({
                   </TableCell>
                 ))}
                 <TableCell className="text-center flex gap-2 justify-center">
-                  <button className="bg-red-500 hover:bg-red-600 text-white font-semibold px-3 py-1 rounded-lg transition-all flex items-center justify-center" title="Eliminar">
+                  <button 
+                    className="bg-red-500 hover:bg-red-600 text-white font-semibold px-3 py-1 rounded-lg transition-all flex items-center justify-center"
+                    title="Eliminar"
+                    onClick={() => handleDelete(row)}
+                  >
                     <FiTrash2 className="text-lg" />
                   </button>
                 </TableCell>

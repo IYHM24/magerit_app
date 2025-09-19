@@ -1,12 +1,13 @@
 // src/pages/administracion/Departamentos.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ModernTable from "@/components/ModernTable";
+import { 
+  obtenerDepartamentos, crearDepartamento,
+  actualizarDepartamento,
+  eliminarDepartamento
+ } from "@/controller/Administracion/AdministracionController.service";
 
-const initialData = [
-  { id: 1, nombre: "Recursos Humanos", activo: true },
-  { id: 2, nombre: "Finanzas", activo: true },
-  { id: 3, nombre: "TI", activo: false },
-];
+type initialData = { id: number; nombre: string; activo: boolean };
 
 import type { TableColumn } from "@/components/ModernTable";
 
@@ -41,21 +42,49 @@ const columns: TableColumn[] = [
 ];
 
 const Departamentos: React.FC = () => {
-  const [data, setData] = useState(initialData);
 
-  const handleChange = (newData: any[]) => {
-    setData(newData as typeof initialData);
+  const fetch_data = async () => {
+    const departamentos = await obtenerDepartamentos();
+    setData([...departamentos]);
+  }
+  
+
+  useEffect(() => {
+    fetch_data();
+  }, []);
+
+  const [data, setData] = useState<initialData[]>([]);
+  
+  const handleChange = (newData: any) => {
+    //Actualizar en la base de datos
+     const departamento: initialData = {
+      id: Number(newData.id),
+      nombre: String(newData.nombre).trim(),
+      activo: Boolean(newData.activo),
+    };
+
+    /* Actualizar el departamento en la base de datos */
+    actualizarDepartamento(departamento.id, departamento);
   };
 
-  const handleCreate = () => {
-    debugger;
-    const nextId = data.length ? Math.max(...data.map(d => d.id)) + 1 : 1;
-    setData( prev =>
-      [
-      ...prev,
-      { id: nextId, nombre: "Nuevo Departamento", activo: false },
-    ]);
+  const handleCreate = async () => {
+    /* Guardar en la base de datos */
+    const dataSend = {
+      nombre: "Nuevo Departamento",
+      activo: true
+    }
+    const departamento_creado = await crearDepartamento(dataSend);
+    console.log("ID del departamento creado:", departamento_creado.id);
+
+    /* Actualizar el estado local */
+    setData([...data, departamento_creado]);
   };
+
+  const handleDelete = async (id: number) => {
+    // eliminar un departamento de la base de datos
+    await eliminarDepartamento(id);
+  }
+  
 
   return (
     <div className="my-10">
@@ -65,6 +94,7 @@ const Departamentos: React.FC = () => {
         data={data}
         onChange={handleChange}
         onCreate={handleCreate}
+        onDelete={handleDelete}
       />
     </div>
   );
