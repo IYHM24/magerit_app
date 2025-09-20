@@ -13,7 +13,9 @@ export interface TableColumn {
   editable?: boolean;
   sortable?: boolean;
   width?: string;
-  options?: string[];
+  options?: { label: string; value: number }[]; // Para selects personalizados
+  optionLabelKey?: string;
+  optionValueKey?: string;
 }
 
 interface TableRowData {
@@ -45,7 +47,7 @@ const ModernTable: React.FC<ModernTableProps> = ({
   }, [data]);
 
   const sortedData = React.useMemo(() => {
-    const withIdx = tableData?.map((row, idx) => ({ ...row, _originalIdx: idx })) as (TableRowData & { _originalIdx: number })[];
+    const withIdx = tableData && tableData?.map((row, idx) => ({ ...row, _originalIdx: idx })) as (TableRowData & { _originalIdx: number })[];
     if (!sortConfig) return withIdx;
     return withIdx.sort((a, b) => {
       if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === "asc" ? -1 : 1;
@@ -57,6 +59,7 @@ const ModernTable: React.FC<ModernTableProps> = ({
   const handleEdit = (rowIdx: number, key: string, value: any) => {
     const originalIdx = sortedData[rowIdx]._originalIdx;
     const newData = [...(tableData || [])];
+
     newData[originalIdx][key] = value;
     setTableData(newData);
     onChange?.(newData[originalIdx]);
@@ -153,41 +156,43 @@ const ModernTable: React.FC<ModernTableProps> = ({
                       />
                     ) : col.type === "select" && col.options ? (
                       <select
-                        value={row[col.key]}
+                        value={
+                          typeof row[col.key] === "number"
+                            ? row[col.key]
+                            : typeof row[col.key] === "string"
+                            ? col.options.find(opt => opt.label === row[col.key])?.value ?? ""
+                            : row[col.key]?.value ?? ""
+                        }
                         onChange={(e) => {
                           if (!col.editable) return;
+                          const selected = col.options?.find(
+                            (opt) => String(opt.value) === e.target.value
+                          );
                           const originalIdx = sortedData[rowIdx]._originalIdx;
                           const newData = [...tableData];
-                          newData[originalIdx][col.key] = e.target.value;
+                          newData[originalIdx][col.key] = selected ? selected.value : 0;
                           setTableData(newData);
-                          handleEdit(rowIdx, col.key, e.target.value);
+                          handleEdit(rowIdx, col.key, selected ? selected.value : 0);
                         }}
                         disabled={!col.editable}
                         className="bg-gray-100 dark:bg-gray-800 text-black dark:text-white px-2 py-1 rounded w-full"
                       >
                         {col.options.map((opt) => (
-                          <option key={opt} value={opt}>
-                            {opt}
+                          <option key={opt.value} value={opt.value}>
+                            {opt.label}
                           </option>
                         ))}
                       </select>
+                    ) : col.type === "select" && col.options && typeof row[col.key] === "number" ? (
+                      <span>
+                        {col.options.find((opt) => opt.value === row[col.key])?.label ?? ""}
+                      </span>
                     ) : col.type === "number" && col.editable ? (
                       <input
                         type="number"
                         value={row[col.key]}
                         onChange={(e) => {
                           const value = Number(e.target.value);
-                          const originalIdx = sortedData[rowIdx]._originalIdx;
-                          const newData = [...tableData];
-                          newData[originalIdx][col.key] = value;
-                          setTableData(newData);
-                        }}
-                        onBlur={(e) => {
-                          const value = Number(e.target.value);
-                          const originalIdx = sortedData[rowIdx]._originalIdx;
-                          const newData = [...tableData];
-                          newData[originalIdx][col.key] = value;
-                          setTableData(newData);
                           handleEdit(rowIdx, col.key, value);
                         }}
                         className="bg-gray-100 dark:bg-gray-800 text-black dark:text-white px-2 py-1 rounded w-full"

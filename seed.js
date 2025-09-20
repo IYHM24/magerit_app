@@ -1,6 +1,6 @@
 // seed.js - Semilla inicial para Tipo_Activo usando Sequelize
 
-const { sequelize, Tipo_Activo } = require('./models');
+const { sequelize, Tipo_Activo } = require('./src/backend/models');
 
 async function main() {
   await sequelize.sync({ force: true }); // Crea tablas y borra datos previos

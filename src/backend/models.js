@@ -25,15 +25,17 @@ const Tipo_Activo = sequelize.define('Tipo_Activo', {
 const Activo = sequelize.define('Activo', {
   id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
   activo: { type: DataTypes.STRING, allowNull: false },
-  id_tipo_activo: { type: DataTypes.INTEGER, allowNull: false },
+  tipo_activo: { type: DataTypes.INTEGER },
+  nombre_tipo_activo: { type: DataTypes.STRING},
   valor: { type: DataTypes.INTEGER },
   valoracion: { type: DataTypes.STRING },
   autenticidad: { type: DataTypes.INTEGER },
   confidencialidad: { type: DataTypes.INTEGER },
   integridad: { type: DataTypes.INTEGER },
   disponibilidad: { type: DataTypes.INTEGER },
-  trazabiliad: { type: DataTypes.INTEGER },
-  id_propietario: { type: DataTypes.INTEGER, allowNull: false }
+  trazabilidad: { type: DataTypes.INTEGER },
+  id_propietario: { type: DataTypes.INTEGER },
+  propietario: { type: DataTypes.STRING }
 });
 
 // Relaciones
