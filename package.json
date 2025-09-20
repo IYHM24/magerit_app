@@ -1,23 +1,28 @@
 {
+  "name": "magerit-platform",
+  "version": "1.0.0",
+  "description": "Aplicación de escritorio Magerit con Electron y React",
+  "author": "Tu Nombre",
+  "main": "./main.js",
   "devDependencies": {
     "concurrently": "^9.2.1",
     "electron": "^38.1.2",
-    "prisma": "^6.16.2",
+    "electron-rebuild": "^3.2.9",
+    "pkg": "^5.8.1",
     "sqlite3": "^5.1.7"
   },
   "scripts": {
+    "build": "pnpm --filter ./src/frontend build && pkg ./src/backend/main.js --out-dir dist/backend --targets node18-win-x64",
     "build:frontend": "cd src/frontend && npm install && npm run build",
-    "electron": "electron src/backend/main.js",
-    "run:migracion_inicial": "npx prisma migrate dev",
+    "electron": "electron main.js",
     "run:frontend": "cd src/frontend && pnpm run dev",
     "run:electron": "pnpm run electron",
-    "run:development": "concurrently \"pnpm run:frontend\" \"pnpm run:electron\""
+    "run:development": "concurrently \"pnpm run:frontend\" \"pnpm run:electron\"",
+    "rebuild": "electron-rebuild -f -w sqlite3"
   },
   "dependencies": {
-    "@prisma/client": "^6.16.2",
-    "ts-node": "^10.9.2"
-  },
-  "prisma": {
-    "seed": "ts-node ./prisma/seed.ts"
+    "bindings": "^1.5.0",
+    "sequelize": "^6.37.7",
+    "sqlite3": "^5.1.7"
   }
 }

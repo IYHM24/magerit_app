@@ -1,14 +1,95 @@
 {
   "appId": "com.magerit.desktop",
   "productName": "Magerit Platform",
+  "asar": false,
   "directories": {
     "output": "dist"
   },
   "files": [
-    "src/**/*",
-    "prisma/**/*",
+    "main.js",
+    "src/backend/**/*",
+    "src/frontend/dist/**/*",
     "node_modules/**/*",
     "package.json"
+  ],
+  "extraResources": [
+    {
+      "from": "node_modules/sequelize",
+      "to": "node_modules/sequelize"
+    },
+    {
+      "from": "node_modules/pg-connection-string",
+      "to": "node_modules/pg-connection-string"
+    },
+    {
+      "from": "node_modules/retry-as-promised",
+      "to": "node_modules/retry-as-promised"
+    },
+    {
+      "from": "node_modules/sqlite3",
+      "to": "node_modules/sqlite3"
+    },
+    {
+      "from": "node_modules/lodash",
+      "to": "node_modules/lodash"
+    },
+    {
+      "from": "node_modules/wkx",
+      "to": "node_modules/wkx"
+    },
+    {
+      "from": "node_modules/validator",
+      "to": "node_modules/validator"
+    },
+    {
+      "from": "node_modules/moment",
+      "to": "node_modules/moment"
+    },
+    {
+      "from": "node_modules/moment-timezone",
+      "to": "node_modules/moment-timezone"
+    },
+    {
+      "from": "node_modules/debug",
+      "to": "node_modules/debug"
+    },
+    {
+      "from": "node_modules/ms",
+      "to": "node_modules/ms"
+    },
+    {
+      "from": "node_modules/uuid",
+      "to": "node_modules/uuid"
+    },
+    {
+      "from": "node_modules/inflection",
+      "to": "node_modules/inflection"
+    },
+    {
+      "from": "node_modules/dottie",
+      "to": "node_modules/dottie"
+    },
+    {
+      "from": "node_modules/toposort-class",
+      "to": "node_modules/toposort-class"
+    },
+    {
+      "from": "node_modules/sequelize-pool",
+      "to": "node_modules/sequelize-pool"
+    },
+    {
+      "from": "node_modules/semver",
+      "to": "node_modules/semver"
+    },
+    {
+      "from": "node_modules/bindings",
+      "to": "node_modules/bindings"
+    },
+    {
+      "from": "node_modules/file-uri-to-path",
+      "to": "node_modules/file-uri-to-path"
+    },
+    "src/backend/db.sqlite"
   ],
   "win": {
     "target": "nsis"

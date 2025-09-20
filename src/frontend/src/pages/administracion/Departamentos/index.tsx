@@ -45,7 +45,12 @@ const columns: TableColumn[] = [
 const Departamentos: React.FC = () => {
 
   const fetch_data = async () => {
-    const departamentos = await obtenerDepartamentos();
+    const departamentos_response = await obtenerDepartamentos();
+    const departamentos = departamentos_response.map((dept: any) => ({
+      id: dept.dataValues.id,
+      nombre: dept.dataValues.nombre,
+      activo: dept.dataValues.activo,
+    }));
     setData([...departamentos]);
   }
   
