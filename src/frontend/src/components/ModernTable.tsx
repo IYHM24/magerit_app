@@ -66,7 +66,7 @@ const ModernTable: React.FC<ModernTableProps> = ({
   };
 
   const handleDelete = (row: TableRowData & { _originalIdx: number }) => {
-    debugger
+    
     const originalIdx = row._originalIdx;
     const newData = [...(tableData || [])];
     newData.splice(originalIdx, 1);

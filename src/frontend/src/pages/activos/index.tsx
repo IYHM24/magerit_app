@@ -1,9 +1,9 @@
 // src/pages/activos/index.tsx
-import React, { act, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ModernTable from "@/components/ModernTable";
 import type { TableColumn } from "@/components/ModernTable";
 import NavigationArrows from "@/components/NavigationArrows";
-import { actualizarActivo, crearActivo, obtenerActivos } from "@/controller/Activos/ActivosController.service";
+import { actualizarActivo, crearActivo, eliminarActivo, obtenerActivos } from "@/controller/Activos/ActivosController.service";
 import { obtenerTiposActivo } from "@/controller/Tipo_Activos/TipoActivosController.service";
 import { obtenerDepartamentos } from "@/controller/Administracion/AdministracionController.service";
 import { capitalizeFirstLetter } from "@/utils/tools";
@@ -46,7 +46,7 @@ const columns: TableColumn[] = [
     width: "180px",
   },
   {
-    key: "nombre_tipo_activo",
+    key: "tipo_activo",
     label: "Tipo activo",
     type: "select" as const,
     fixed: false,
@@ -88,7 +88,7 @@ const columns: TableColumn[] = [
     width: "80px",
   })),
   {
-    key: "propietario",
+    key: "id_propietario",
     label: "Propietario",
     type: "select" as const,
     fixed: false,
@@ -176,11 +176,12 @@ const Activos: React.FC = () => {
   /*  */
 
   const handleChange = (newData: any) => {
+
     /* Construir objeto de actualización */
     const update_data = {
       id: Number(newData.id),
       activo: String(newData.activo).trim(),
-      tipo_activo: Number(newData.nombre_tipo_activo) || 1,
+      tipo_activo: Number(newData.tipo_activo) || 1,
       nombre_tipo_activo: tipoActivoOptions.find(opt => opt.value === Number(newData.nombre_tipo_activo))?.label || "N/A",
       valor: Number(newData.valor) || 0,
       valoracion: String(newData.valoracion).trim() || "N/A",
@@ -189,10 +190,9 @@ const Activos: React.FC = () => {
       integridad: Number(newData.integridad) || 0,
       disponibilidad: Number(newData.disponibilidad) || 0,
       trazabilidad: Number(newData.trazabilidad) || 0,
-      id_propietario: Number(newData.propietario) || 1,
+      id_propietario: Number(newData.id_propietario) || 1,
       propietario: propietarioOptions.find(opt => opt.value === Number(newData.propietario))?.label || "N/A",
     }
-    debugger;
 
     /* Actualizar en la base de datos */
     actualizarActivo(update_data.id, update_data);
@@ -218,12 +218,21 @@ const Activos: React.FC = () => {
     }
 
     /* Crear nuevo activo */
-    const nextId = await crearActivo(data_to_create)
-    const new_data = { id: nextId, ...data_to_create };
+    const nextId = await crearActivo(data_to_create);
+    const new_data = { id: nextId.id, ...data_to_create };
 
     /* Actualizar estado local */
     setData(prevData => [...prevData, new_data]);
   };
+
+  const handleDelete = (id:number) => {
+    eliminarActivo(id);
+    /* Actualizar estado local */
+    setData(prevData => prevData.filter(item => item.id !== id));
+  }
+  
+
+  /*  */
 
   return (
     <>
@@ -234,6 +243,7 @@ const Activos: React.FC = () => {
           data={data}
           onChange={handleChange}
           onCreate={handleCreate}
+          onDelete={handleDelete}
         />
       </div>
       <NavigationArrows 

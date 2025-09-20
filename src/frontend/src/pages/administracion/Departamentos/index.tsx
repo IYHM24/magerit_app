@@ -89,6 +89,8 @@ const Departamentos: React.FC = () => {
   const handleDelete = async (id: number) => {
     // eliminar un departamento de la base de datos
     await eliminarDepartamento(id);
+    // actualizar el estado local
+    setData(data.filter((dept) => dept.id !== id));
   }
   
 
