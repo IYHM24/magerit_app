@@ -13,12 +13,14 @@
   },
   "scripts": {
     "build": "pnpm --filter ./src/frontend build && pkg ./src/backend/main.js --out-dir dist/backend --targets node18-win-x64",
-    "build:frontend": "cd src/frontend && npm install && npm run build",
+    "build:frontend": "cd src/frontend && npm run build",
     "electron": "electron main.js",
     "run:frontend": "cd src/frontend && pnpm run dev",
     "run:electron": "pnpm run electron",
     "run:development": "concurrently \"pnpm run:frontend\" \"pnpm run:electron\"",
-    "rebuild": "electron-rebuild -f -w sqlite3"
+    "rebuild": "electron-rebuild -f -w sqlite3",
+    "build:electron": "npx electron-builder --win --x64",
+    "build:all": "npm run build:frontend && npm run build:electron"
   },
   "dependencies": {
     "bindings": "^1.5.0",
