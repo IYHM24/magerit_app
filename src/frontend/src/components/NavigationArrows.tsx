@@ -29,7 +29,7 @@ const NavigationArrows: React.FC<NavigationArrowsProps> = ({ nextPath, prevPath,
             <Link to={nextPath} className="flex items-center gap-2">
                 {nextText}
                 <button
-                    className="bg-lime-500 hover:bg-lime-600 text-white rounded-full p-2 flex items-center gap-2"
+                    className="bg-lime-500 hover:bg-lime-600 text-white dark:text-black rounded-full p-2 flex items-center gap-2"
                     title="Siguiente"
                 >
                     <FiArrowRight size={24} />

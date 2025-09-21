@@ -1,7 +1,7 @@
 // api.departamentos.js - CRUD para departamentos usando Sequelize y Electron IPC
 
 const { ipcMain } = require('electron');
-const { Departamento } = require('./models');
+const { Departamento, Activo } = require('./models');
 
 console.log('api.departamentos.js cargado (Sequelize)');
 
@@ -29,6 +29,8 @@ ipcMain.handle('departamento:update', async (event, { id, data }) => {
 
 // Eliminar departamento
 ipcMain.handle('departamento:delete', async (event, id) => {
+  // Eliminar activos relacionados primero
+  await Activo.destroy({ where: { departamentoId: id } });
   await Departamento.destroy({ where: { id } });
   return { id };
 });

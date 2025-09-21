@@ -18,8 +18,8 @@ function createWindow() {
   });
 
   win.maximize();
-  win.loadFile(path.join(__dirname, '../app/src/frontend/dist/index.html'));
-  //win.loadURL('http://localhost:5173');
+  //win.loadFile(path.join(__dirname, '../app/src/frontend/dist/index.html'));
+  win.loadURL('http://localhost:5173');
   
   // Integrar lógica backend (API Sequelize)
   require('./src/backend/api.departamentos.js');
@@ -28,6 +28,8 @@ function createWindow() {
   console.log('api.activos.js requeridos correctamente');
   require('./src/backend/api.tipo_activo.js');
   console.log('api.tipo_activo.js requeridos correctamente');
+  require('./src/backend/api.amenazas.js');
+  console.log('api.amenazas.js requeridos correctamente');
 
 
   // Migrar y sincronizar modelos Sequelize al iniciar la app
