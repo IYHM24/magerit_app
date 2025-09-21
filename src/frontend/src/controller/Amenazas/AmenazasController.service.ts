@@ -28,6 +28,12 @@ export const crearAmenaza = async (data: any) =>
 export const obtenerAmenazas = async () =>
   await ipcRenderer.invoke('amenaza:findMany');
 
+export const crearAmenazaTipoActivo = async (data: any) =>
+  await ipcRenderer.invoke('amenaza_tipo_activo:create', data);
+
+export const eliminarAmenazaTipoActivo = async (id_amenaza: number, tipo_activo: string) =>
+  await ipcRenderer.invoke('amenaza_tipo_activo:deleteByAmenazaTipo', { id_amenaza, tipo_activo });
+
 export const obtenerAmenaza = async (id: number) =>
   await ipcRenderer.invoke('amenaza:findUnique', id);
 

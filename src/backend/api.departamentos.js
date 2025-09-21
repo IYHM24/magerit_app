@@ -28,9 +28,19 @@ ipcMain.handle('departamento:update', async (event, { id, data }) => {
 });
 
 // Eliminar departamento
+const { Riesgo_Intriseco, Riesgo_Intriseco_Vs_Activo, Total_Riesgo_Intriseco_Activo } = require('./models');
+
 ipcMain.handle('departamento:delete', async (event, id) => {
-  // Eliminar activos relacionados primero
-  await Activo.destroy({ where: { departamentoId: id } });
+  // Buscar activos relacionados
+  const activos = await Activo.findAll({ where: { departamentoId: id } });
+  for (const activo of activos) {
+    // Eliminar riesgos intrínsecos relacionados
+    await Riesgo_Intriseco.destroy({ where: { id_activo: activo.id } });
+    await Riesgo_Intriseco_Vs_Activo.destroy({ where: { id_activo: activo.id } });
+    await Total_Riesgo_Intriseco_Activo.destroy({ where: { id_activo: activo.id } });
+    // Eliminar activo
+    await Activo.destroy({ where: { id: activo.id } });
+  }
   await Departamento.destroy({ where: { id } });
   return { id };
 });

@@ -11,9 +11,25 @@ ipcMain.handle('activo:create', async (event, data) => {
   return { id: activo.id };
 });
 
+const { Op } = require('sequelize');
+
 // Leer todos los activos
 ipcMain.handle('activo:findMany', async () => {
   return await Activo.findAll();
+});
+
+// Leer activos por tipo (case-insensitive)
+ipcMain.handle('activo:findByTipo', async (event, tipo) => {
+  const tipoLower = tipo.toLowerCase();
+  return await Activo.findAll({
+    where: {
+      tipo_activo: {
+        [Op.like]: `%${tipoLower}%`
+      }
+    }
+  }).then(activos =>
+    activos.filter(a => (a.tipo_activo || '').toLowerCase() === tipoLower)
+  );
 });
 
 // Leer activo por id
@@ -27,8 +43,13 @@ ipcMain.handle('activo:update', async (event, { id, data }) => {
   return await Activo.findByPk(id);
 });
 
+const { Riesgo_Intriseco, Riesgo_Intriseco_Vs_Activo, Total_Riesgo_Intriseco_Activo } = require('./models');
+
 // Eliminar activo
 ipcMain.handle('activo:delete', async (event, id) => {
+  await Riesgo_Intriseco.destroy({ where: { id_activo: id } });
+  await Riesgo_Intriseco_Vs_Activo.destroy({ where: { id_activo: id } });
+  await Total_Riesgo_Intriseco_Activo.destroy({ where: { id_activo: id } });
   await Activo.destroy({ where: { id } });
   return { id };
 });

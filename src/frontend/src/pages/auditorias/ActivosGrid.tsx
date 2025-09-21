@@ -4,15 +4,17 @@ import { obtenerActivos } from '@/controller/Activos/ActivosController.service'
 import React, { useEffect, useState } from 'react'
 
 type props = {
-    title: string
+    title: string,
+    onClick?: (id: any) => void
 }
 
-type activo = {
+export type activo = {
     id: number,
     nombre: string
+   
 }
 
-const ActivosGrid: React.FC<props> = ({ title }) => {
+const ActivosGrid: React.FC<props> = ({ title, onClick }) => {
 
   const [activos, setActivos] = useState<activo[]>([]);
 
@@ -35,7 +37,7 @@ const ActivosGrid: React.FC<props> = ({ title }) => {
             <CardGrid
                 title={title || "Activos"}
                 items={activos}
-                onClick={(item) =>alert(`Seleccionado activo con id: ${item.id}`)}
+                onClick={onClick}
             />
             <NavigationArrows prevPath='/activos' prevText='Gestionar activos'/>
         </div>

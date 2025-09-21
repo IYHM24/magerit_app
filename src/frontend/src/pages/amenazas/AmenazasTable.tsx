@@ -9,8 +9,9 @@ import {
     eliminarAmenaza,
     obtenerAmenazasPorGrupo 
 } from "@/controller/Amenazas/AmenazasController.service";
+import { mapRiesgoIntrinseco } from "@/utils/riesgo_intriseco.builder";
 
-type AmenazaType = {
+export type AmenazaType = {
   id?: number;
   id_grupo_amenaza: number;
   amenaza: string;
@@ -25,6 +26,7 @@ type AmenazaType = {
   informacion: boolean;
   instalaciones: boolean;
   personal: boolean;
+  [key: string]: string | number | boolean | undefined;
 };
 
 const columns: TableColumn[] = [
@@ -75,14 +77,31 @@ const AmenazasTable: React.FC<Props> = ({ id_grupo_amenaza }) => {
     setData(amenazas);
   };
 
-  const handleChange = async (newData: AmenazaType) => {
+  const handleChange = async (newData: AmenazaType, key: string) => {
+    
     debugger
+
+    if( newData.amenaza.trim() === "" ) {
+      /* Ahorita miramos esto - no reversa cuando esta vacio */
+      console.log("Nombre de amenaza no puede estar vacío " + data);
+      setData((prevData) => [...prevData]);
+      return ;
+    }
+
+    /* Actualizar amenazs */
     await actualizarAmenaza(newData.id!, newData);
-    fetchAmenazas();
+
+    /* Actualizar o crear riesgo intrínseco */
+    ["servicios", "software", "hardware", "informacion", "instalaciones", "personal"].includes(key)
+    && mapRiesgoIntrinseco(newData, key);
+
+
+    /* actualizar estado local */
+    setData(data.map(item => item.id === newData.id ? newData : item));
+
   };
 
   const handleCreate = async () => {
-    debugger
     //Construir objeto
     const nuevaAmenaza: AmenazaType = {
       id_grupo_amenaza: id_grupo_amenaza,

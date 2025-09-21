@@ -8,6 +8,9 @@ export const crearActivo = async (data: any) =>
 export const obtenerActivos = async () =>
   await ipcRenderer.invoke('activo:findMany');
 
+export const obtenerActivosPorTipo = async (tipo: string) =>
+  await ipcRenderer.invoke('activo:findByTipo', tipo);
+
 export const obtenerActivo = async (id: number) =>
   await ipcRenderer.invoke('activo:findUnique', id);
 

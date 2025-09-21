@@ -26,7 +26,7 @@ interface ModernTableProps {
   title: string;
   columns: TableColumn[];
   data: TableRowData[];
-  onChange?: (newData: any) => void;
+  onChange?: (newData: any, key: string) => void;
   onCreate?: () => void;
   onDelete?: (id: number) => void;
 }
@@ -57,12 +57,18 @@ const ModernTable: React.FC<ModernTableProps> = ({
   }, [tableData, sortConfig]);
 
   const handleEdit = (rowIdx: number, key: string, value: any) => {
+    
+    /*  */
     const originalIdx = sortedData[rowIdx]._originalIdx;
     const newData = [...(tableData || [])];
+    
 
+    /*  */
     newData[originalIdx][key] = value;
     setTableData(newData);
-    onChange?.(newData[originalIdx]);
+
+    /*  */
+    onChange?.(newData[originalIdx], key);
   };
 
   const handleDelete = (row: TableRowData & { _originalIdx: number }) => {
@@ -252,9 +258,9 @@ const ModernTable: React.FC<ModernTableProps> = ({
                     )}
                     </TableCell>
                   ))}
-                  <TableCell className="text-center flex gap-2 justify-center" style={{ minWidth: "80px" }}>
+                  <TableCell className="text-center flex gap-2 align-middle! justify-center" style={{ minWidth: "80px" }}>
                     <button 
-                      className="bg-red-500 hover:bg-red-600 text-white font-semibold px-3 py-1 rounded-lg transition-all flex items-center justify-center"
+                      className="bg-red-500 my-auto hover:bg-red-600 text-white font-semibold px-3 py-1 rounded-lg transition-all flex items-center justify-center"
                       title="Eliminar"
                       onClick={() => handleDelete(row)}
                     >

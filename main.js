@@ -25,12 +25,13 @@ function createWindow() {
   require('./src/backend/api.departamentos.js');
   console.log('api.departamentos.js requeridos correctamente');
   require('./src/backend/api.activos.js');
-  console.log('api.activos.js requeridos correctamente');
-  require('./src/backend/api.tipo_activo.js');
+  //console.log('api.activos.js requeridos correctamente');
+  //require('./src/backend/api.tipo_activo.js');
   console.log('api.tipo_activo.js requeridos correctamente');
   require('./src/backend/api.amenazas.js');
   console.log('api.amenazas.js requeridos correctamente');
-
+  require('./src/backend/api.riesgo_intriseco.js');
+  console.log('api.riesgo_intriseco.js requeridos correctamente');
 
   // Migrar y sincronizar modelos Sequelize al iniciar la app
   sequelize.sync().then(() => {
