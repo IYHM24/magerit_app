@@ -123,3 +123,11 @@
     font-family: 'Poppins', sans-serif;
   }
 }
+
+.scrollbar-hide-vertical {
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide-vertical::-webkit-scrollbar {
+  width: 0px; /* Chrome/Safari */
+}

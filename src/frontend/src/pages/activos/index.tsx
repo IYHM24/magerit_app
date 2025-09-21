@@ -6,7 +6,7 @@ import NavigationArrows from "@/components/NavigationArrows";
 import { actualizarActivo, crearActivo, eliminarActivo, obtenerActivos } from "@/controller/Activos/ActivosController.service";
 import { obtenerTiposActivo } from "@/controller/Tipo_Activos/TipoActivosController.service";
 import { obtenerDepartamentos } from "@/controller/Administracion/AdministracionController.service";
-import { capitalizeFirstLetter } from "@/utils/tools";
+import { capitalizeFirstLetter, getValoracion } from "@/utils/tools";
 
 
 type OptionType = { label: string; value: number };
@@ -43,7 +43,7 @@ const columns: TableColumn[] = [
     fixed: false,
     editable: true,
     sortable: true,
-    width: "180px",
+    width: "120px",
   },
   {
     key: "tipo_activo",
@@ -70,7 +70,7 @@ const columns: TableColumn[] = [
     label: "Valoración",
     type: "text" as const,
     fixed: false,
-    editable: true,
+    editable: false,
     sortable: true,
     width: "120px",
   },
@@ -177,6 +177,10 @@ const Activos: React.FC = () => {
 
   const handleChange = (newData: any) => {
 
+    /* obtener valor del activo */
+    const valor_activo = Number(newData.valor) || 0;
+    const valoracion_activo = getValoracion(valor_activo);
+
     /* Construir objeto de actualización */
     const update_data = {
       id: Number(newData.id),
@@ -184,7 +188,7 @@ const Activos: React.FC = () => {
       tipo_activo: Number(newData.tipo_activo) || 1,
       nombre_tipo_activo: tipoActivoOptions.find(opt => opt.value === Number(newData.nombre_tipo_activo))?.label || "N/A",
       valor: Number(newData.valor) || 0,
-      valoracion: String(newData.valoracion).trim() || "N/A",
+      valoracion: String(valoracion_activo).split(";")[0] || "N/A",
       autenticidad: Number(newData.autenticidad) || 0,
       confidencialidad: Number(newData.confidencialidad) || 0,
       integridad: Number(newData.integridad) || 0,
@@ -196,10 +200,17 @@ const Activos: React.FC = () => {
 
     /* Actualizar en la base de datos */
     actualizarActivo(update_data.id, update_data);
-   
+
+    /* Actualizar estado local */
+    setData(prevData => prevData.map(item => item.id === update_data.id ? update_data : item));
+
   };
 
   const handleCreate = async () => {
+
+    /* obtener valor del activo */
+    const valor_activo = Number(0) || 0;
+    const valoracion_activo = getValoracion(valor_activo);
 
     /* Crear nuevo activo */
     const data_to_create: initialDataType = {
@@ -207,7 +218,7 @@ const Activos: React.FC = () => {
       tipo_activo: 1,
       nombre_tipo_activo:"N/A",
       valor: 0,
-      valoracion: "N/A",
+      valoracion: valoracion_activo.split(";")[0],
       autenticidad: 0,
       confidencialidad: 0,
       integridad: 0,

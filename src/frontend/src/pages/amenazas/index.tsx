@@ -84,7 +84,7 @@ const AmenazasPage: React.FC = () => {
     <>
       {idGrupoAmenazaSeleccionado === 0 ?
         (<>
-          <div className="p-6 min-h-screen">
+          <div className="p-6 max-h-screen">
             <CardGrid
               title="Grupo de amenazas"
               items={items}

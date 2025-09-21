@@ -94,16 +94,18 @@ const ModernTable: React.FC<ModernTableProps> = ({
           </button>
         </div>
         {/* Scroll SOLO en la tabla */}
-        <div className="max-w-[1378px] overflow-y-hidden">
-          <Table>
-            <TableHeader>
+        <div className="max-w-[1378px] max-h-[60vh]! overflow-x-auto">
+          <Table className="w-min-full">
+            <TableHeader className="sticky top-0 z-20">
               <TableRow>
                 {columns.map((col, idx) => (
-                  <TableHead
-                    key={col.key + " idx:" + idx}
-                    className={`bg-lime-100 dark:bg-gray-800 text-black dark:text-lime-400 font-semibold text-center whitespace-nowrap`}
-                    style={{ width: col.width || "auto", minWidth: "80px" }}
-                  >
+                    <TableHead
+                      key={col.key + " idx:" + idx}
+                      className={
+                        `bg-lime-100 dark:bg-gray-800 text-black dark:text-lime-400 font-semibold text-center whitespace-nowrap ${idx === 1 ? `sticky left-0 z-10 ` : ""}`
+                      }
+                      style={{ minWidth: col.width || "80px" }}
+                    >
                     <div className="flex items-center justify-center gap-2">
                       {col.label}
                       {col.sortable && (
@@ -136,12 +138,12 @@ const ModernTable: React.FC<ModernTableProps> = ({
             </TableHeader>
             <TableBody>
               {sortedData.map((row, rowIdx) => (
-                <TableRow key={rowIdx} className="hover:bg-lime-50 dark:hover:bg-gray-800">
+                <TableRow key={rowIdx} className="group hover:bg-lime-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-900">
                   {columns.map((col, colIdx) => (
                     <TableCell
                       key={col.key + " idx:" + colIdx}
-                      className="text-center align-middle whitespace-nowrap"
-                      style={{ width: col.width || "auto", minWidth: "80px" }}
+                      className={`group-hover:bg-lime-50 dark:group-hover:bg-gray-800 text-center align-middle whitespace-nowrap ${colIdx === 1 ? `sticky left-0 z-10 bg-white dark:bg-gray-900 group-hover:bg-lime-50` : ""}`}
+                      style={{ minWidth: col.width || "80px" }}
                     >
                       {col.type === "checkbox" ? (
                         <input

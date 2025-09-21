@@ -3,7 +3,12 @@
 import React, { useEffect, useState } from "react";
 import ModernTable from "@/components/ModernTable";
 import type { TableColumn } from "@/components/ModernTable";
-import { obtenerAmenazas, crearAmenaza, actualizarAmenaza, eliminarAmenaza, obtenerAmenazasPorGrupo } from "@/controller/Amenazas/AmenazasController.service";
+import { 
+    crearAmenaza,
+    actualizarAmenaza,
+    eliminarAmenaza,
+    obtenerAmenazasPorGrupo 
+} from "@/controller/Amenazas/AmenazasController.service";
 
 type AmenazaType = {
   id?: number;
