@@ -94,8 +94,8 @@ const ModernTable: React.FC<ModernTableProps> = ({
           </button>
         </div>
         {/* Scroll SOLO en la tabla */}
-        <div className="max-w-[1378px] max-h-[60vh]! overflow-x-auto">
-          <Table className="w-min-full">
+        <div className="max-w-[1378px] max-h-[60vh]! min-h-40 overflow-x-auto overflow-y-auto">
+          <Table>
             <TableHeader className="sticky top-0 z-20">
               <TableRow>
                 {columns.map((col, idx) => (
