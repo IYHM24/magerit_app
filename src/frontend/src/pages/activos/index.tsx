@@ -43,7 +43,7 @@ const columns: TableColumn[] = [
     fixed: false,
     editable: true,
     sortable: true,
-    width: "120px",
+    width: "200px",
   },
   {
     key: "tipo_activo",
@@ -181,28 +181,30 @@ const Activos: React.FC = () => {
     const valor_activo = Number(newData.valor) || 0;
     const valoracion_activo = getValoracion(valor_activo);
 
-    /* Construir objeto de actualización */
-    const update_data = {
-      id: Number(newData.id),
-      activo: String(newData.activo).trim(),
-      tipo_activo: Number(newData.tipo_activo) || 1,
-      nombre_tipo_activo: tipoActivoOptions.find(opt => opt.value === Number(newData.nombre_tipo_activo))?.label || "N/A",
-      valor: Number(newData.valor) || 0,
-      valoracion: String(valoracion_activo).split(";")[0] || "N/A",
-      autenticidad: Number(newData.autenticidad) || 0,
-      confidencialidad: Number(newData.confidencialidad) || 0,
-      integridad: Number(newData.integridad) || 0,
-      disponibilidad: Number(newData.disponibilidad) || 0,
-      trazabilidad: Number(newData.trazabilidad) || 0,
-      id_propietario: Number(newData.id_propietario) || 1,
-      propietario: propietarioOptions.find(opt => opt.value === Number(newData.propietario))?.label || "N/A",
+    if(String(newData.activo).trim().length !== 0){
+      /* Construir objeto de actualización */
+      const update_data = {
+        id: Number(newData.id),
+        activo: String(newData.activo).trim() || "Activo sin nombre",
+        tipo_activo: Number(newData.tipo_activo) || 1,
+        nombre_tipo_activo: tipoActivoOptions.find(opt => opt.value === Number(newData.tipo_activo))?.label || "N/A",
+        valor: Number(newData.valor) || 0,
+        valoracion: String(valoracion_activo).split(";")[0] || "N/A",
+        autenticidad: Number(newData.autenticidad) || 0,
+        confidencialidad: Number(newData.confidencialidad) || 0,
+        integridad: Number(newData.integridad) || 0,
+        disponibilidad: Number(newData.disponibilidad) || 0,
+        trazabilidad: Number(newData.trazabilidad) || 0,
+        id_propietario: Number(newData.id_propietario) || 1,
+        propietario: propietarioOptions.find(opt => opt.value === Number(newData.id_propietario))?.label || "N/A",
+      }
+
+      /* Actualizar en la base de datos */
+      actualizarActivo(update_data.id, update_data);
+      
+      /* Actualizar estado local */
+      setData(prevData => prevData.map(item => item.id === update_data.id ? update_data : item));
     }
-
-    /* Actualizar en la base de datos */
-    actualizarActivo(update_data.id, update_data);
-
-    /* Actualizar estado local */
-    setData(prevData => prevData.map(item => item.id === update_data.id ? update_data : item));
 
   };
 

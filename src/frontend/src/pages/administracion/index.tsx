@@ -18,7 +18,7 @@ const AdminPage: React.FC = () => {
 
   return (
     <>
-      <div className="w-full my-10 rounded-xl shadow-lg p-8 bg-zinc-200 dark:bg-zinc-800">
+      <div className="w-full my-10 rounded-xl shadow-lg p-8 bg-white dark:bg-gray-900">
         <h1 className="text-2xl font-bold mb-4 text-black dark:text-white text-center">Administración</h1>
         <h2 className="text-lg font-semibold mb-2 text-lime-600 dark:text-lime-400">Instrucciones de uso</h2>
         <ol className="list-decimal pl-6 mb-6 text-gray-700 dark:text-gray-200">

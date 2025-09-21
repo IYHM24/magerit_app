@@ -19,7 +19,7 @@ export const ToggleThemeButton: React.FC = () => {
   return (
     <button
       onClick={handleToggle}
-      className="px-3 py-2 rounded-lg bg-zinc-200 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 shadow transition-all duration-300 hover:bg-green-500 hover:text-white dark:hover:bg-green-500 dark:hover:text-white"
+      className="px-3 py-2 rounded-lg bg-white dark:bg-gray-900 text-zinc-800 dark:text-zinc-200 shadow transition-all duration-300 hover:bg-lime-500 hover:text-white dark:hover:bg-lime-500 dark:hover:text-black"
       aria-label="Cambiar tema"
     >
       {isDark ? "🌙 Modo oscuro" : "☀️ Modo claro"}

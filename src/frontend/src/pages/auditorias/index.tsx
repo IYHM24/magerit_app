@@ -70,7 +70,7 @@ const AuditsPage: React.FC = () => {
       ) :
         (
           <>
-            <div className="flex gap-2 mb-4">
+            <div className="flex gap-2 my-4">
               <div className="flex items-center gap-2">
                 <button
                   title="Volver a grupos de amenazas"
