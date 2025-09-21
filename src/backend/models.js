@@ -69,26 +69,22 @@ const Amenazas = sequelize.define('Amenaza', {
 
 const Riesgo_Intriseco = sequelize.define('Riesgo_Intriseco', {
   id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-  valoracion_vulnerabilidad: { type: DataTypes.STRING },
-  valor_vulnearabilidad: { type: DataTypes.INTEGER },
-  valoracion_impacto: { type: DataTypes.INTEGER },
-  valor_impacto: { type: DataTypes.INTEGER },
-  riesgo_intrinseco: { type: DataTypes.INTEGER },
-});
-
-//Tabla intermedia riesgo intrinseco vs activo
-const Riesgo_Intriseco_Vs_Activo = sequelize.define('Riesgo_Intriseco_Vs_Activo', {
-  id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
   id_activo: { type: DataTypes.INTEGER },
-  id_tipo_servicio: { type: DataTypes.INTEGER },
-  id_riesgo_intrinseco: { type: DataTypes.INTEGER },
+  tipo_activo: { type: DataTypes.STRING },
+  id_amenaza: { type: DataTypes.INTEGER },
+  amenaza: { type: DataTypes.STRING },
+  valoracion_vulnerabilidad: { type: DataTypes.STRING },
+  valor_vulnearabilidad: { type: DataTypes.DOUBLE },
+  valoracion_impacto: { type: DataTypes.STRING },
+  valor_impacto: { type: DataTypes.INTEGER },
+  riesgo_intrinseco: { type: DataTypes.DOUBLE },
 });
 
 //Tabla total riesgo intrinseco vs activo relacion 1 a 1 un activo solo tiene un total de riesgo intrinseco
 const Total_Riesgo_Intriseco_Activo = sequelize.define('Total_Riesgo_Intriseco_Activo', {
   id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-  id_riesgo_intrinseco: { type: DataTypes.INTEGER },
   id_activo: { type: DataTypes.INTEGER },
+  tipo_activo: { type: DataTypes.INTEGER },
   total_riesgo_intrinseco_activo: { type: DataTypes.INTEGER },
 });
 
@@ -118,12 +114,9 @@ Amenazas.belongsTo(Amenaza_Grupo, { foreignKey: 'id_grupo_amenaza' });
 Riesgo_Intriseco.belongsTo(Amenazas, { foreignKey: 'id_amenaza' });
 Amenazas.hasMany(Riesgo_Intriseco, { foreignKey: 'id_amenaza' });
 
-//un activo solo puede tener un riesgo intrisenco (no total) 1:1
-Riesgo_Intriseco.belongsTo(Riesgo_Intriseco_Vs_Activo, { foreignKey: 'id_activo' });
-Riesgo_Intriseco_Vs_Activo.hasOne(Riesgo_Intriseco, { foreignKey: 'id_activo' });
-//
-Activo.belongsTo(Riesgo_Intriseco_Vs_Activo, { foreignKey: 'id_activo' });
-Riesgo_Intriseco_Vs_Activo.hasOne(Activo, { foreignKey: 'id_activo' });
+//Un activo puede tener varios riesgos intrinsecos
+Riesgo_Intriseco.belongsTo(Activo, { foreignKey: 'id_activo' });
+Activo.hasMany(Riesgo_Intriseco, { foreignKey: 'id_activo' });
 
 
 //un riesgo intrinseco solo puede tener un total de riesgo intrinseco 1:1
@@ -134,7 +127,6 @@ module.exports = {
   sequelize, Departamento, 
   Activo, Amenaza_Grupo,
   Amenazas, Riesgo_Intriseco,
-  Riesgo_Intriseco_Vs_Activo,
   Total_Riesgo_Intriseco_Activo,
   Amenaza_Tipo_Activo
  };

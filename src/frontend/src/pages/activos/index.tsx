@@ -10,7 +10,7 @@ import { capitalizeFirstLetter, getValoracion } from "@/utils/tools";
 
 
 type OptionType = { label: string; value: any };
-type initialDataType = {
+export type ActivoType = {
   id?: number;
   activo: string;
   tipo_activo: string;
@@ -110,7 +110,7 @@ const columns: TableColumn[] = [
 ];
 
 const Activos: React.FC = () => {
-  const [data, setData] = useState<initialDataType[]>([]);
+  const [data, setData] = useState<ActivoType[]>([]);
   const [columnsState, setColumnsState] = useState<TableColumn[]>([]);
   //const [tipoActivoOptions, setTipoActivoOptions] = useState<OptionType[]>([]);
   const [propietarioOptions, setPropietarioOptions] = useState<OptionType[]>([]);
@@ -228,7 +228,7 @@ const Activos: React.FC = () => {
     const valoracion_activo = getValoracion(valor_activo);
 
     /* Crear nuevo activo */
-    const data_to_create: initialDataType = {
+    const data_to_create: ActivoType = {
       activo: "Nuevo Activo",
       tipo_activo: "N/A",
       //nombre_tipo_activo: "N/A",

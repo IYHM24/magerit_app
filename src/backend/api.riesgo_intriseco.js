@@ -3,7 +3,6 @@
 const { ipcMain } = require('electron');
 const {
   Riesgo_Intriseco,
-  Riesgo_Intriseco_Vs_Activo,
   Total_Riesgo_Intriseco_Activo,
   Amenaza_Tipo_Activo
 } = require('./models');
@@ -11,10 +10,28 @@ const {
 // CRUD Riesgo_Intriseco
 ipcMain.handle('riesgo_intriseco:create', async (event, data) => {
   const item = await Riesgo_Intriseco.create(data);
-  return item;
+  return await Riesgo_Intriseco.findByPk(item.id);
 });
 ipcMain.handle('riesgo_intriseco:findMany', async () => {
   return await Riesgo_Intriseco.findAll();
+});
+
+// Upsert Total_Riesgo_Intriseco_Activo por id_activo y tipo_activo
+ipcMain.handle('total_riesgo_intriseco_activo:upsert', async (event, { id_activo, tipo_activo, data }) => {
+  let registro = await Total_Riesgo_Intriseco_Activo.findOne({ where: { id_activo, tipo_activo } });
+  if (registro) {
+    await registro.update(data);
+    return registro;
+  } else {
+    registro = await Total_Riesgo_Intriseco_Activo.create({ ...data, id_activo, tipo_activo });
+    return registro;
+  }
+});
+
+ipcMain.handle('riesgo_intriseco:findByActivoTipo', async (event, { id_activo, tipo_activo }) => {
+  return await Riesgo_Intriseco.findAll({
+    where: { id_activo, tipo_activo }
+  });
 });
 ipcMain.handle('riesgo_intriseco:findUnique', async (event, id) => {
   return await Riesgo_Intriseco.findByPk(id);
@@ -48,4 +65,17 @@ ipcMain.handle('amenaza_tipo_activo:exists', async (event, { id_amenaza, tipo_ac
     where: { id_amenaza, tipo_activo }
   });
   return !!exists;
+});
+
+const { Amenazas } = require('./models');
+ipcMain.handle('amenaza:findByTipoActivo', async (event, tipo_activo) => {
+  // Buscar todos los id_amenaza asociados al tipo_activo
+  const relaciones = await Amenaza_Tipo_Activo.findAll({ where: { tipo_activo } });
+  const ids = relaciones.map(r => r.id_amenaza);
+  // Buscar amenazas por id
+  const amenazas = await Amenazas.findAll({
+    where: { id: ids }
+  });
+  // Retornar amenazas
+  return amenazas;
 });

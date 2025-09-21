@@ -13,7 +13,7 @@ export interface TableColumn {
   editable?: boolean;
   sortable?: boolean;
   width?: string;
-  options?: { label: string; value: number }[]; // Para selects personalizados
+  options?: { label: string; value: any }[]; // Para selects personalizados
   optionLabelKey?: string;
   optionValueKey?: string;
 }
@@ -57,11 +57,11 @@ const ModernTable: React.FC<ModernTableProps> = ({
   }, [tableData, sortConfig]);
 
   const handleEdit = (rowIdx: number, key: string, value: any) => {
-    
+
     /*  */
     const originalIdx = sortedData[rowIdx]._originalIdx;
     const newData = [...(tableData || [])];
-    
+
 
     /*  */
     newData[originalIdx][key] = value;
@@ -72,7 +72,7 @@ const ModernTable: React.FC<ModernTableProps> = ({
   };
 
   const handleDelete = (row: TableRowData & { _originalIdx: number }) => {
-    
+
     const originalIdx = row._originalIdx;
     const newData = [...(tableData || [])];
     newData.splice(originalIdx, 1);
@@ -105,13 +105,13 @@ const ModernTable: React.FC<ModernTableProps> = ({
             <TableHeader className="sticky top-0 z-20">
               <TableRow>
                 {columns.map((col, idx) => (
-                    <TableHead
-                      key={col.key + " idx:" + idx}
-                      className={
-                        `bg-lime-100 dark:bg-gray-800 text-black dark:text-lime-400 font-semibold text-center whitespace-nowrap ${idx === 1 ? `sticky left-0 z-10 ` : ""}`
-                      }
-                      style={{ minWidth: col.width || "80px" }}
-                    >
+                  <TableHead
+                    key={col.key + " idx:" + idx}
+                    className={
+                      `bg-lime-100 dark:bg-gray-800 text-black dark:text-lime-400 font-semibold text-center whitespace-nowrap ${idx === 1 ? `sticky left-0 z-10 ` : ""}`
+                    }
+                    style={{ minWidth: col.width || "80px" }}
+                  >
                     <div className="flex items-center justify-center gap-2">
                       {col.label}
                       {col.sortable && (
@@ -137,9 +137,11 @@ const ModernTable: React.FC<ModernTableProps> = ({
                     </div>
                   </TableHead>
                 ))}
-                <TableHead className="bg-lime-100 dark:bg-gray-800 text-black dark:text-lime-400 font-semibold text-center whitespace-nowrap" style={{ minWidth: "80px" }}>
-                  Acciones
-                </TableHead>
+                {onDelete && (
+                  <TableHead className="bg-lime-100 dark:bg-gray-800 text-black dark:text-lime-400 font-semibold text-center whitespace-nowrap" style={{ minWidth: "80px" }}>
+                    Acciones
+                  </TableHead>
+                )}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -172,13 +174,13 @@ const ModernTable: React.FC<ModernTableProps> = ({
                             typeof row[col.key] === "number"
                               ? row[col.key]
                               : typeof row[col.key] === "string"
-                              ? col.options.find(opt => opt.label === row[col.key])?.value ?? ""
-                              : row[col.key]?.value ?? ""
+                                ? col.options.find(opt => String(opt.value) === row[col.key] || opt.label === row[col.key])?.value ?? ""
+                                : row[col.key]?.value ?? ""
                           }
                           onChange={(e) => {
                             if (!col.editable) return;
                             const selected = col.options?.find(
-                              (opt) => String(opt.value) === e.target.value
+                              (opt) => String(opt.value) === e.target.value || opt.label === e.target.value
                             );
                             const originalIdx = sortedData[rowIdx]._originalIdx;
                             const newData = [...tableData];
@@ -225,48 +227,51 @@ const ModernTable: React.FC<ModernTableProps> = ({
                             minimumFractionDigits: 2,
                           })}
                         </span>
-                    ) : col.type === "textarea" && col.editable ? (
-                      <textarea
-                        value={row[col.key] ?? ""}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          const originalIdx = sortedData[rowIdx]._originalIdx;
-                          const newData = [...tableData];
-                          newData[originalIdx][col.key] = value;
-                          setTableData(newData);
-                          handleEdit(rowIdx, col.key, value);
-                        }}
-                        rows={3}
-                        className="bg-gray-100! dark:bg-gray-800! text-black! dark:text-white! px-2 py-1 rounded w-full min-w-[360px] border border-transparent focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-lime-400 resize-y"
-                      />
-                    ) : col.editable ? (
-                      <input
-                        type="text"
-                        value={row[col.key] ?? ""}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          const originalIdx = sortedData[rowIdx]._originalIdx;
-                          const newData = [...tableData];
-                          newData[originalIdx][col.key] = value;
-                          setTableData(newData);
-                          handleEdit(rowIdx, col.key, value);
-                        }}
-                        className="bg-gray-100 dark:bg-gray-800 text-black dark:text-white px-2 py-1 rounded w-full border border-transparent focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-lime-400"
-                      />
-                    ) : (
-                      <span>{row[col.key] ?? ""}</span>
-                    )}
+                      ) : col.type === "textarea" && col.editable ? (
+                        <textarea
+                          value={row[col.key] ?? ""}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            const originalIdx = sortedData[rowIdx]._originalIdx;
+                            const newData = [...tableData];
+                            newData[originalIdx][col.key] = value;
+                            setTableData(newData);
+                            handleEdit(rowIdx, col.key, value);
+                          }}
+                          rows={3}
+                          className="bg-gray-100! dark:bg-gray-800! text-black! dark:text-white! px-2 py-1 rounded w-full min-w-[360px] border border-transparent focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-lime-400 resize-y"
+                        />
+                      ) : col.editable ? (
+                        <input
+                          type="text"
+                          value={row[col.key] ?? ""}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            const originalIdx = sortedData[rowIdx]._originalIdx;
+                            const newData = [...tableData];
+                            newData[originalIdx][col.key] = value;
+                            setTableData(newData);
+                            handleEdit(rowIdx, col.key, value);
+                          }}
+                          className="bg-gray-100 dark:bg-gray-800 text-black dark:text-white px-2 py-1 rounded w-full border border-transparent focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-lime-400"
+                        />
+                      ) : (
+                        <span>{row[col.key] ?? ""}</span>
+                      )}
                     </TableCell>
                   ))}
-                  <TableCell className="text-center flex gap-2 align-middle! justify-center" style={{ minWidth: "80px" }}>
-                    <button 
-                      className="bg-red-500 my-auto hover:bg-red-600 text-white font-semibold px-3 py-1 rounded-lg transition-all flex items-center justify-center"
-                      title="Eliminar"
-                      onClick={() => handleDelete(row)}
-                    >
-                      <FiTrash2 className="text-lg" />
-                    </button>
-                  </TableCell>
+                  {onDelete && (
+                    <TableCell className="text-center flex gap-2 align-middle! justify-center" style={{ minWidth: "80px" }}>
+
+                      <button
+                        className="bg-red-500 my-auto hover:bg-red-600 text-white font-semibold px-3 py-1 rounded-lg transition-all flex items-center justify-center"
+                        title="Eliminar"
+                        onClick={() => handleDelete(row)}
+                      >
+                        <FiTrash2 className="text-lg" />
+                      </button>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>

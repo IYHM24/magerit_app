@@ -78,8 +78,6 @@ const AmenazasTable: React.FC<Props> = ({ id_grupo_amenaza }) => {
   };
 
   const handleChange = async (newData: AmenazaType, key: string) => {
-    
-    debugger
 
     if( newData.amenaza.trim() === "" ) {
       /* Ahorita miramos esto - no reversa cuando esta vacio */

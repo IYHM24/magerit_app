@@ -8,6 +8,9 @@ export const crearRiesgoIntriseco = async (data: any) =>
 export const obtenerRiesgosIntriseco = async () =>
   await ipcRenderer.invoke('riesgo_intriseco:findMany');
 
+export const obtenerRiesgosIntrisecoPorActivoTipo = async (id_activo: number, tipo_activo: string) =>
+  await ipcRenderer.invoke('riesgo_intriseco:findByActivoTipo', { id_activo, tipo_activo });
+
 export const obtenerRiesgoIntriseco = async (id: number) =>
   await ipcRenderer.invoke('riesgo_intriseco:findUnique', id);
 
@@ -25,6 +28,9 @@ export const eliminarAmenazaTipoActivo = async (id_amenaza: number, tipo_activo:
 
 export const existeAmenazaTipoActivo = async (id_amenaza: number, tipo_activo: string) =>
   await ipcRenderer.invoke('amenaza_tipo_activo:exists', { id_amenaza, tipo_activo });
+
+export const obtenerAmenazasPorTipoActivo = async (tipo_activo: string) =>
+  await ipcRenderer.invoke('amenaza:findByTipoActivo', tipo_activo);
 
 // CRUD para RiesgoIntrisecoVsActivo
 export const crearRiesgoIntrisecoVsActivo = async (data: any) =>
@@ -57,3 +63,6 @@ export const actualizarTotalRiesgoIntrisecoActivo = async (id: number, data: any
 
 export const eliminarTotalRiesgoIntrisecoActivo = async (id: number) =>
   await ipcRenderer.invoke('total_riesgo_intriseco_activo:delete', id);
+
+export const upsertTotalRiesgoIntrisecoActivo = async (id_activo: number, tipo_activo: string, data: any) =>
+  await ipcRenderer.invoke('total_riesgo_intriseco_activo:upsert', { id_activo, tipo_activo, data });
