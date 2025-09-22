@@ -57,12 +57,12 @@ const AuditsPage: React.FC = () => {
                   Riesgo residual
                 </div>
               </div>
-              <div className="grid grid-cols-1">
+             {/*  <div className="grid grid-cols-1">
                 <div className={`${cardBase} ${cardHover} w-full`} onClick={() => changePage(3)}>
                   <FaRegSmileBeam className="text-5xl mb-4 text-lime-500 transition-all duration-500 group-hover:animate-pulse" />
                   Resultados
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
           <NavigationArrows prevPath="/amenazas" prevText="Volver a Amenazas" nextPath="" />

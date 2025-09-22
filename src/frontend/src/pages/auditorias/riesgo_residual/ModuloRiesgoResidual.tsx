@@ -7,10 +7,11 @@ type Props = {
     activoInfo: ActivoType[];
     riesgosResiduales: riesgo_residual[];
     totalRiesgoResidual: number;
+    totalRiesgoIntrinseco: number;
     setTotalRiesgoResidual: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export const ModuloRiesgoResidual: React.FC<Props> = ({ activoInfo, riesgosResiduales, totalRiesgoResidual, setTotalRiesgoResidual  }) => {
+export const ModuloRiesgoResidual: React.FC<Props> = ({ activoInfo, riesgosResiduales, totalRiesgoResidual, setTotalRiesgoResidual, totalRiesgoIntrinseco  }) => {
 
 
     //
@@ -28,9 +29,19 @@ export const ModuloRiesgoResidual: React.FC<Props> = ({ activoInfo, riesgosResid
             />
 
             {/* Total */}
-            <div className='p-6'>
-                <h2 className='font-extrabold'>Total riesgo:</h2>
-                <span>{totalRiesgoResidual.toFixed(2)}</span>
+            <div className='p-6 flex justify-around gap-4'>
+                <div>
+                    <h2 className='font-extrabold'>Total riesgo:</h2>
+                    <span>{totalRiesgoResidual.toFixed(2)}</span>
+                </div>
+                <div>
+                    <h2 className='font-extrabold'>Total riesgo intrínseco:</h2>
+                    <span>{totalRiesgoIntrinseco.toFixed(2)}</span>
+                </div>
+                <div>
+                    <h2 className='font-extrabold'>Diferencia:</h2>
+                    <span>{(totalRiesgoIntrinseco - totalRiesgoResidual).toFixed(2)}</span>
+                </div>
             </div>
         </div>
     )

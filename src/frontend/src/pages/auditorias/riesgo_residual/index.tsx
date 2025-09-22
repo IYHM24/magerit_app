@@ -3,9 +3,9 @@ import ActivosGrid from '../ActivosGrid'
 import type { activo } from '../ActivosGrid'
 import type { ActivoType } from '@/pages/activos'
 import { obtenerActivo } from '@/controller/Activos/ActivosController.service'
-import { obtenerRiesgosIntrisecoPorActivoTipo } from '@/controller/Auditorias/RiesgoIntrisecoController.service'
+import { obtenerRiesgosIntrisecoPorActivoTipo, obtenerTotalesRiesgoIntrisecoActivo } from '@/controller/Auditorias/RiesgoIntrisecoController.service'
 import type { riesgo_intriseco, riesgo_residual } from '@/utils/riesgo_intriseco.builder'
-import { CalcularTotalRiesgoResidual, RiesgoResidualBuildTable } from '@/utils/riesgo_intriseco.builder'
+import { CalcularTotalRiesgoIntrinseco, CalcularTotalRiesgoResidual, RiesgoResidualBuildTable } from '@/utils/riesgo_intriseco.builder'
 import { ModuloRiesgoResidual } from './ModuloRiesgoResidual'
 import { obtenerRiesgosResidualPorActivoTipo } from '@/controller/Auditorias/RiesgoResidualController.service'
 
@@ -15,6 +15,7 @@ const RiesgoResidual: React.FC = () => {
     const [activoInfo, setActivoInfo] = React.useState<ActivoType[]>([]);;
     const [riesgosResiduales, setRiesgosResiduales] = React.useState<riesgo_residual[]>([]);
     const [totalRiesgoResidual, setTotalRiesgoResidual] = React.useState<number>(0);
+    const [totalRiesgoIntrinseco, setTotalRiesgoIntrinseco] = React.useState<number>(0);
 
     /*  */
     useEffect(() => {
@@ -87,14 +88,17 @@ const RiesgoResidual: React.FC = () => {
         //Obtener los nuevos registros
         const nuevos_registros_db = await obtenerRiesgosResidualPorActivoTipo(id, tipo_activo.toLowerCase());
         const nuevos_registros = nuevos_registros_db.map((riesgo: any) => riesgo.dataValues);
-        
+
         //insertar o actualizar el total de riesgo intrinseco
         const total_db = await CalcularTotalRiesgoResidual(Number(activo_info.id) || 0, tipo_activo.toLowerCase(), nuevos_registros);
         const total = total_db.dataValues.total_riesgo_residual_activo;
-
+        const total_riesgo_intrinseco_db = await CalcularTotalRiesgoIntrinseco(Number(activo_info.id) || 0, tipo_activo.toLowerCase(), riesgos_intrinsecos_list);
+        const total_riesgo_intrinseco = total_riesgo_intrinseco_db.dataValues.total_riesgo_intrinseco_activo;
+        
         //Acualizar estados locales
         setActivoInfo([activo_info]);
         setTotalRiesgoResidual(total);
+        setTotalRiesgoIntrinseco(total_riesgo_intrinseco);
         setRiesgosResiduales(nuevos_registros);
   
       }
@@ -114,6 +118,7 @@ const RiesgoResidual: React.FC = () => {
             activoInfo={activoInfo}
             riesgosResiduales={riesgosResiduales}
             totalRiesgoResidual={totalRiesgoResidual}
+            totalRiesgoIntrinseco={totalRiesgoIntrinseco}
             setTotalRiesgoResidual={setTotalRiesgoResidual}
           />
         </>
