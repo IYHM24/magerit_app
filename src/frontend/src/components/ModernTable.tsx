@@ -87,7 +87,7 @@ const ModernTable: React.FC<ModernTableProps> = ({
   return (
     <div className="w-full">
       <div
-        className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-4"
+        className="max-w-7xl! bg-white dark:bg-gray-900 rounded-xl shadow-lg p-4"
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-bold text-black dark:text-white">{title}</h2>
@@ -100,8 +100,8 @@ const ModernTable: React.FC<ModernTableProps> = ({
           </button>
         </div>
         {/* Scroll SOLO en la tabla */}
-        <div className="max-w-[1378px] max-h-[60vh]! min-h-40 overflow-x-auto overflow-y-auto">
-          <Table>
+        <div className="max-h-[60vh]! min-h-40 overflow-x-auto overflow-y-auto">
+          <Table className="w-full!">
             <TableHeader className="sticky top-0 z-20">
               <TableRow>
                 {columns.map((col, idx) => (
