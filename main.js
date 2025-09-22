@@ -18,8 +18,8 @@ function createWindow() {
   });
 
   win.maximize();
-  //win.loadFile(path.join(__dirname, '../app/src/frontend/dist/index.html'));
-  win.loadURL('http://localhost:5173');
+  win.loadFile(path.join(__dirname, '../app/src/frontend/dist/index.html'));
+  //win.loadURL('http://localhost:5173');
   
   // Integrar lógica backend (API Sequelize)
   require('./src/backend/api.departamentos.js');
