@@ -69,6 +69,10 @@ ipcMain.handle('amenaza:update', async (event, { id, data }) => {
 });
 
 ipcMain.handle('amenaza:delete', async (event, id) => {
+  // Eliminar riesgos residuales relacionados
+  await Riesgo_Residual.destroy({ where: { id_amenaza: amenaza.id } });
+  // Eliminar riesgos intrínsecos relacionados
+  await Riesgo_Intriseco.destroy({ where: { id_amenaza: amenaza.id } });
   await Amenazas.destroy({ where: { id } });
   return { id };
 });
