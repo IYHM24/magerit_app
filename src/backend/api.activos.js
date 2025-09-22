@@ -2,6 +2,9 @@
 
 const { ipcMain } = require('electron');
 const { Activo } = require('./models');
+const { Riesgo_Intriseco, Total_Riesgo_Intriseco_Activo } = require('./models');
+const { Riesgo_Residual, Total_Riesgo_Residual_Activo } = require('./models');
+
 
 console.log('api.activos.js cargado (Sequelize)');
 
@@ -43,10 +46,11 @@ ipcMain.handle('activo:update', async (event, { id, data }) => {
   return await Activo.findByPk(id);
 });
 
-const { Riesgo_Intriseco, Riesgo_Intriseco_Vs_Activo, Total_Riesgo_Intriseco_Activo } = require('./models');
 
 // Eliminar activo
 ipcMain.handle('activo:delete', async (event, id) => {
+  await Riesgo_Residual.destroy({ where: { id_activo: id } });
+  await Total_Riesgo_Residual_Activo.destroy({ where: { id_activo: id } });
   await Riesgo_Intriseco.destroy({ where: { id_activo: id } });
   await Riesgo_Intriseco_Vs_Activo.destroy({ where: { id_activo: id } });
   await Total_Riesgo_Intriseco_Activo.destroy({ where: { id_activo: id } });

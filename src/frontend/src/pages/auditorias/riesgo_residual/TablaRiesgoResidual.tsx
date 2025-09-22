@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ModernTable from "../../../components/ModernTable";
 import type { TableColumn } from "../../../components/ModernTable";
-import { CalcularTotalRiesgoResidual, RiesgoResidualUpdateTable, type riesgo_intriseco, type riesgo_residual } from "@/utils/riesgo_intriseco.builder";
+import { CalcularTotalRiesgoResidual, RiesgoResidualUpdateTable, type riesgo_residual } from "@/utils/riesgo_intriseco.builder";
 
 
 const columns: TableColumn[] = [
@@ -17,7 +17,7 @@ type propsTable = {
   valorActivo?: number;
 }
 
-const TablaRiesgoResidual: React.FC<propsTable> = ({ riesgosResiduales, setTotalRiesgoResidual, valorActivo }) => {
+const TablaRiesgoResidual: React.FC<propsTable> = ({ riesgosResiduales, setTotalRiesgoResidual }) => {
   const [data, setData] = useState<riesgo_residual[]>([]);
 
   /*  */
@@ -32,6 +32,8 @@ const TablaRiesgoResidual: React.FC<propsTable> = ({ riesgosResiduales, setTotal
 
   /*  */
   const handleChange = async (newData: any) => {
+
+    debugger;
 
     // Actualizar el registro en la base de datos
     newData = await RiesgoResidualUpdateTable(newData);

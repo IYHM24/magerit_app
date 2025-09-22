@@ -28,16 +28,22 @@ ipcMain.handle('departamento:update', async (event, { id, data }) => {
 });
 
 // Eliminar departamento
-const { Riesgo_Intriseco, Riesgo_Intriseco_Vs_Activo, Total_Riesgo_Intriseco_Activo } = require('./models');
+const { Riesgo_Intriseco, Riesgo_Intriseco_Vs_Activo, Total_Riesgo_Intriseco_Activo, Riesgo_Residual, Total_Riesgo_Residual_Activo } = require('./models');
 
 ipcMain.handle('departamento:delete', async (event, id) => {
   // Buscar activos relacionados
-  const activos = await Activo.findAll({ where: { departamentoId: id } });
+  const activos_db = await Activo.findAll({ where: { id_propietario: id } });
+  const activos = activos_db.map(a => a.dataValues );
   for (const activo of activos) {
+    // Eliminar riesgos residuales relacionados
+    await Riesgo_Residual.destroy({ where: { id_activo: activo.id } });
+    await Total_Riesgo_Residual_Activo.destroy({ where: { id_activo: activo.id } });
     // Eliminar riesgos intrínsecos relacionados
     await Riesgo_Intriseco.destroy({ where: { id_activo: activo.id } });
-    await Riesgo_Intriseco_Vs_Activo.destroy({ where: { id_activo: activo.id } });
     await Total_Riesgo_Intriseco_Activo.destroy({ where: { id_activo: activo.id } });
+    // Eliminar riesgos residuales relacionados
+    //await Riesgo_Residual.destroy({ where: { id_activo: activo.id } });
+    //await Total_Riesgo_Residual_Activo.destroy({ where: { id_activo: activo.id } });
     // Eliminar activo
     await Activo.destroy({ where: { id: activo.id } });
   }

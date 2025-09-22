@@ -2,6 +2,8 @@
 
 const { ipcMain } = require('electron');
 const { Amenaza_Grupo, Amenazas } = require('./models');
+const { Riesgo_Intriseco, Total_Riesgo_Intriseco_Activo } = require('./models');
+const { Riesgo_Residual, Total_Riesgo_Residual_Activo } = require('./models');
 
 // CRUD GrupoAmenaza
 ipcMain.handle('grupoAmenaza:create', async (event, data) => {
@@ -23,10 +25,24 @@ ipcMain.handle('grupoAmenaza:update', async (event, { id, data }) => {
 });
 
 ipcMain.handle('grupoAmenaza:delete', async (event, id) => {
-  // Eliminar amenazas relacionadas primero
-  await Amenaza.destroy({ where: { grupoAmenazaId: id } });
-  await GrupoAmenaza.destroy({ where: { id } });
-  return { id };
+  try {
+    // Eliminar amenazas relacionadas primero
+    const Amenazas_db = await Amenazas.findAll({ where: { id_grupo_amenaza: id } });
+    const amenazas = Amenazas_db.map(a => a.dataValues);
+    for (const amenaza of amenazas) {
+      // Eliminar riesgos residuales relacionados
+      await Riesgo_Residual.destroy({ where: { id_amenaza: amenaza.id } });
+      // Eliminar riesgos intrínsecos relacionados
+      await Riesgo_Intriseco.destroy({ where: { id_amenaza: amenaza.id } });
+    }
+    await Amenazas.destroy({ where: { id_grupo_amenaza: id } });
+    await Amenaza_Grupo.destroy({ where: { id } });
+    return { id };
+  } catch (error) {
+    console.error('Error al eliminar grupo de amenaza:', error);
+    throw error;
+  }
+
 });
 
 ipcMain.handle('amenaza:findByGrupo', async (event, grupoAmenazaId) => {

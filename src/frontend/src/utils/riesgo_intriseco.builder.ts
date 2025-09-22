@@ -172,10 +172,10 @@ export const RiesgoResidualUpdateTable = async (riesgo_residual: riesgo_residual
     /* Actualizar tabla */
     const riesgo_residual_actualizar: riesgo_residual = {
         id: Number(riesgo_residual.id) || 0,
-        id_activo: Number(riesgo_residual.id) || 0,
+        id_activo: Number(riesgo_residual.id_activo) || 0,
         tipo_activo: String(riesgo_residual.tipo_activo.toLowerCase()) || "",
         id_amenaza: Number(riesgo_residual.id_amenaza) || 0,
-        id_riesgo_intrinseco: Number(riesgo_residual.id) || 0,
+        id_riesgo_intrinseco: Number(riesgo_residual.id_riesgo_intrinseco) || 0,
         amenaza: String(riesgo_residual.amenaza) || "",
         valor_riesgo_residual: Number(total_riesgo_residual) || 0,
         valor_riesgo_intriseco: Number(riesgo_residual.valor_riesgo_intriseco) || 0,
