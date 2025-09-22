@@ -5,15 +5,15 @@ import React from "react";
 const AdminPage: React.FC = () => {
 
   const instrucciones:string [] =[
+    "Cree los departamentos dueños o gestionadores de los activos.",
     "Agregar un nuevo Activo a el inventario desde el módulo de Activos, agregar los detalles necesarios.",
     "Ir al modulo de amenazas, definir las amenazas que pueden afectar al grupo de los activos.",
-    "En auditoria se debe rellenar la fecuencia de riesgo y el impacto para cada activo.",
-    "En el mismo modulo, se mostrarán los riesgos intrisecos calculados automáticamente.",
-    "Rellenar los controles de seguridad en el modulo de controles.",
-    "Se mostrarán los resultados de los riesgos residuales calculados automáticamente.",
-    "Ir al modulo resultados para ver los reportes generados.",
-    "Se puede evidenciar los activos con mas riesgo.",
-    "Se puede evidenciar los resultados de los activos con mas riesgo al aplicar los controles.",
+    "Existen dos modulos, eliga primero riesgo intriseco",
+    "Rellenar la frecuencia y el impacto de cada amenaza para el activo seleccionado.",
+    "Luego ir al modulo de riesgo residual",
+    "Rellenar la eficacia de los controles para cada amenaza del activo seleccionado.",
+    "En la parte inferior de ambos modulos se encuentra el total de riesgo intrínseco y residual.",
+    "Adicional en la parte inferior del modulo de riesgo residual, se encuentra la diferencia entre ambos riesgos.",
   ]
 
   return (

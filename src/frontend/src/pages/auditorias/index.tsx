@@ -1,7 +1,7 @@
 // src/pages/auditorias/index.tsx
 import NavigationArrows from "@/components/NavigationArrows";
 import React, { useEffect, useState } from "react";
-import { FaCalculator, FaChartBar, FaRegSmileBeam } from "react-icons/fa";
+import { FaCalculator, FaChartBar } from "react-icons/fa";
 import { FiArrowLeft } from "react-icons/fi";
 import RiesgoIntrinseco from "./riesgo_intriseco";
 import RiesgoResidual from "./riesgo_residual";

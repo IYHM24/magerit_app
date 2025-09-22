@@ -52,7 +52,6 @@ ipcMain.handle('activo:delete', async (event, id) => {
   await Riesgo_Residual.destroy({ where: { id_activo: id } });
   await Total_Riesgo_Residual_Activo.destroy({ where: { id_activo: id } });
   await Riesgo_Intriseco.destroy({ where: { id_activo: id } });
-  await Riesgo_Intriseco_Vs_Activo.destroy({ where: { id_activo: id } });
   await Total_Riesgo_Intriseco_Activo.destroy({ where: { id_activo: id } });
   await Activo.destroy({ where: { id } });
   return { id };
