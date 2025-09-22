@@ -33,7 +33,7 @@ const TablaRiesgoResidual: React.FC<propsTable> = ({ riesgosResiduales, setTotal
   /*  */
   const handleChange = async (newData: any) => {
 
-    debugger;
+    
 
     // Actualizar el registro en la base de datos
     newData = await RiesgoResidualUpdateTable(newData);
