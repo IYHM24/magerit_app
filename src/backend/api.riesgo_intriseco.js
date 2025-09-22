@@ -50,6 +50,7 @@ ipcMain.handle('amenaza_tipo_activo:create', async (event, data) => {
   const item = await Amenaza_Tipo_Activo.create(data);
   return item;
 });
+
 ipcMain.handle('amenaza_tipo_activo:deleteByAmenazaTipo', async (event, { id_amenaza, tipo_activo }) => {
   await Amenaza_Tipo_Activo.destroy({
     where: {

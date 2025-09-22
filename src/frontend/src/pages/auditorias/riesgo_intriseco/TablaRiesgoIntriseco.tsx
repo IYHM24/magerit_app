@@ -56,19 +56,19 @@ const TablaRiesgoIntriseco: React.FC<propsTable> = ({ riesgosIntrinsecos, setTot
     newData.riesgo_intrinseco = Number(newData.riesgo_intrinseco.toFixed(3));
     newData.valor_vulnearabilidad = Number(newData.valor_vulnearabilidad.toFixed(3));
 
+    const newArrayData = data.map((item) =>
+        item.id === newData.id ? { ...newData } : item
+      )
+
     // Calcular el total de riesgo intrinseco
     const nuevo_total_db = await CalcularTotalRiesgoIntrinseco(
       newData.id_activo,
       newData.tipo_activo,
-      data
+      newArrayData
     );
 
     /* Actualizar estados locales */
-    setData((prevData) =>
-      prevData.map((item) =>
-        item.id === newData.id ? { ...newData } : item
-      )
-    );
+    setData(newArrayData);
 
     setTotalRiesgoIntrinseco(
       Number(nuevo_total_db.dataValues.total_riesgo_intrinseco_activo || 0) 

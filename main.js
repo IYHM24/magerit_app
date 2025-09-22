@@ -32,6 +32,8 @@ function createWindow() {
   console.log('api.amenazas.js requeridos correctamente');
   require('./src/backend/api.riesgo_intriseco.js');
   console.log('api.riesgo_intriseco.js requeridos correctamente');
+  require('./src/backend/api.riesgo_residual.js');
+  console.log('api.riesgo_residual.js requeridos correctamente');
 
   // Migrar y sincronizar modelos Sequelize al iniciar la app
   sequelize.sync().then(() => {

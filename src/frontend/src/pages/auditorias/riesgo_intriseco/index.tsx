@@ -8,6 +8,7 @@ import { obtenerAmenazasPorTipoActivo, obtenerRiesgosIntrisecoPorActivoTipo } fr
 import type { AmenazaType } from '@/pages/amenazas/AmenazasTable'
 import type { riesgo_intriseco } from '@/utils/riesgo_intriseco.builder'
 import { CalcularTotalRiesgoIntrinseco, RiesgoIntrinsecoBuildTable } from '@/utils/riesgo_intriseco.builder'
+import { useNavigate } from 'react-router-dom'
 
 const RiesgoIntrinseco: React.FC = () => {
 
@@ -15,10 +16,13 @@ const RiesgoIntrinseco: React.FC = () => {
   const [activoInfo, setActivoInfo] = React.useState<ActivoType[]>([]);
   const [riesgosIntrinsecos, setRiesgosIntrinsecos] = React.useState<riesgo_intriseco[]>([]);
   const [totalRiesgoIntrinseco, setTotalRiesgoIntrinseco] = React.useState<number>(0);
+  const navigate = useNavigate();
 
   /*  */
   useEffect(() => {
-    configurar_info();
+    if (selectedActivo.id !== 0) {
+      configurar_info();
+    }
   }, [selectedActivo])
 
   /*  */
@@ -55,6 +59,13 @@ const RiesgoIntrinseco: React.FC = () => {
       const amenazas_db = await obtenerAmenazasPorTipoActivo(tipo_activo.toLowerCase());
       const amenazas_list: AmenazaType[] = amenazas_db.map((amenaza: any) => amenaza.dataValues);
 
+      //Validar que existan riesgos intrinsecos si no hay regresar
+      if (amenazas_list.length === 0) {
+        alert("Debe crear primero las amenazas");
+        navigate('/amenazas');
+        return;
+      }
+
       //Obtener los riesgos intrinsecos asociados al activo y tipo de activo
       const riesgos_intrinsecos_db = await obtenerRiesgosIntrisecoPorActivoTipo(id, tipo_activo.toLowerCase());
 
@@ -74,11 +85,11 @@ const RiesgoIntrinseco: React.FC = () => {
       //Obtener los nuevos registros
       const nuevos_registros_db = await obtenerRiesgosIntrisecoPorActivoTipo(id, tipo_activo.toLowerCase());
       const nuevos_registros = nuevos_registros_db.map((riesgo: any) => riesgo.dataValues);
-      
+
       //insertar o actualizar el total de riesgo intrinseco
       const total_db = await CalcularTotalRiesgoIntrinseco(Number(activo_info.id) || 0, tipo_activo.toLowerCase(), nuevos_registros);
       const total = total_db.dataValues.total_riesgo_intrinseco_activo;
-      
+
       //Acualizar estados locales
       setActivoInfo([activo_info]);
       setTotalRiesgoIntrinseco(total);

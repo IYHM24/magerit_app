@@ -64,9 +64,6 @@ const Amenazas = sequelize.define('Amenaza', {
 
 //Riesgo intriseco
 
-
-
-
 const Riesgo_Intriseco = sequelize.define('Riesgo_Intriseco', {
   id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
   id_activo: { type: DataTypes.INTEGER },
@@ -87,6 +84,30 @@ const Total_Riesgo_Intriseco_Activo = sequelize.define('Total_Riesgo_Intriseco_A
   tipo_activo: { type: DataTypes.INTEGER },
   total_riesgo_intrinseco_activo: { type: DataTypes.INTEGER },
 });
+
+//Tabla riesgo residual 
+
+const Riesgo_Residual = sequelize.define('Riesgo_Residual', {
+  id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+  id_activo: { type: DataTypes.INTEGER },
+  id_amenaza: { type: DataTypes.INTEGER },
+  id_riesgo_intrinseco: { type: DataTypes.INTEGER },
+  tipo_activo: { type: DataTypes.STRING },
+  amenaza: { type: DataTypes.STRING },
+  efectividad_control: { type: DataTypes.INTEGER },
+  valor_riesgo_residual: { type: DataTypes.DOUBLE },
+  valor_riesgo_intriseco: { type: DataTypes.DOUBLE },
+});
+
+//Tabla total riesgo residual vs activo relacion 1 a 1 un activo solo tiene un total de riesgo intrinseco
+const Total_Riesgo_Residual_Activo = sequelize.define('Total_Riesgo_Residual_Activo', {
+  id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+  id_activo: { type: DataTypes.INTEGER },
+  tipo_activo: { type: DataTypes.INTEGER },
+  total_riesgo_residual_activo: { type: DataTypes.INTEGER },
+});
+
+
 
 // Tabla amenaza vs tipo de activo
 const Amenaza_Tipo_Activo = sequelize.define('Amenaza_Tipo_Activo', {
@@ -123,10 +144,30 @@ Activo.hasMany(Riesgo_Intriseco, { foreignKey: 'id_activo' });
 Total_Riesgo_Intriseco_Activo.belongsTo(Riesgo_Intriseco, { foreignKey: 'id_riesgo_intrinseco' });
 Riesgo_Intriseco.hasOne(Total_Riesgo_Intriseco_Activo, { foreignKey: 'id_riesgo_intrinseco' });
 
+//Riesgo residual
+
+///Una amenaza puede tener varios riesgos residuales, solo aparece una vez por activo
+Riesgo_Residual.belongsTo(Amenazas, { foreignKey: 'id_amenaza' });
+Amenazas.hasMany(Riesgo_Residual, { foreignKey: 'id_amenaza' });
+
+//Un activo puede tener varios riesgos Residuales
+Riesgo_Residual.belongsTo(Activo, { foreignKey: 'id_activo' });
+Activo.hasMany(Riesgo_Residual, { foreignKey: 'id_activo' });
+
+//Un riesgo residual pertenece a un riesgo intrinseco
+Riesgo_Residual.belongsTo(Riesgo_Intriseco, { foreignKey: 'id_riesgo_intrinseco' });
+Riesgo_Intriseco.hasMany(Riesgo_Residual, { foreignKey: 'id_riesgo_intrinseco' });
+
+//un riesgo intrinseco solo puede tener un total de riesgo intrinseco 1:1
+Total_Riesgo_Residual_Activo.belongsTo(Riesgo_Residual, { foreignKey: 'id_riesgo_residual' });
+Riesgo_Residual.hasOne(Total_Riesgo_Residual_Activo, { foreignKey: 'id_riesgo_residual' });
+
+
 module.exports = {
   sequelize, Departamento, 
   Activo, Amenaza_Grupo,
   Amenazas, Riesgo_Intriseco,
   Total_Riesgo_Intriseco_Activo,
-  Amenaza_Tipo_Activo
+  Amenaza_Tipo_Activo, Riesgo_Residual,
+  Total_Riesgo_Residual_Activo,
  };

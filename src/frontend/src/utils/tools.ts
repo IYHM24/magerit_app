@@ -38,3 +38,7 @@ export const calcularRiesgoIntrinseco = (
   const riesgo = valor_activo * valor_vulnerabilidad * porcentaje;
   return riesgo;  
 }
+
+export const calcular_valor_control = (efectividad: number, riesgo_intriseco: number) => {
+    return (riesgo_intriseco / 100) * efectividad;
+}
