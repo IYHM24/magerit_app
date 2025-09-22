@@ -109,7 +109,7 @@ const RiesgoResidual: React.FC = () => {
     <>
       {selectedActivo.id === 0 ? (
         <ActivosGrid
-          title="Seleccione un activo para evaluar su riesgo intrínseco"
+          title="Seleccione un activo para evaluar su riesgo residual"
           onClick={onClick}
         />
       ) : (

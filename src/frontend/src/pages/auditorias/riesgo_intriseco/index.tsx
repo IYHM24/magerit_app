@@ -34,7 +34,8 @@ const RiesgoIntrinseco: React.FC = () => {
   /*  */
   const configurar_info = async () => {
     const { id } = selectedActivo;
-
+    
+    debugger
     //obtener informacion del activo por Id y construir la informacion
     const activo_info_db = await obtenerActivo(id);
     const activo_info: ActivoType = {

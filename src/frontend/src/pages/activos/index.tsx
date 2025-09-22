@@ -5,9 +5,9 @@ import type { TableColumn } from "@/components/ModernTable";
 import NavigationArrows from "@/components/NavigationArrows";
 import { actualizarActivo, crearActivo, eliminarActivo, obtenerActivos } from "@/controller/Activos/ActivosController.service";
 //import { obtenerTiposActivo } from "@/controller/Tipo_Activos/TipoActivosController.service";
-import { obtenerDepartamentos } from "@/controller/Administracion/AdministracionController.service";
+import { obtenerDepartamentoAlAzar, obtenerDepartamentos } from "@/controller/Administracion/AdministracionController.service";
 import { capitalizeFirstLetter, getValoracion } from "@/utils/tools";
-
+import { useNavigate } from "react-router-dom";
 
 type OptionType = { label: string; value: any };
 export type ActivoType = {
@@ -114,6 +114,7 @@ const Activos: React.FC = () => {
   const [columnsState, setColumnsState] = useState<TableColumn[]>([]);
   //const [tipoActivoOptions, setTipoActivoOptions] = useState<OptionType[]>([]);
   const [propietarioOptions, setPropietarioOptions] = useState<OptionType[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Aquí podrías cargar los datos desde una API o base de datos
@@ -226,11 +227,20 @@ const Activos: React.FC = () => {
     /* obtener valor del activo */
     const valor_activo = Number(0) || 0;
     const valoracion_activo = getValoracion(valor_activo);
+    const departamento_al_azar_db = await obtenerDepartamentoAlAzar();
+    const departamento_al_azar = departamento_al_azar_db.dataValues;
+    const departamentos = await obtenerDepartamentos();
 
+    if(departamentos.length === 0){
+      alert("Debe crear primero un departamento");
+      navigate('/administracion/departamentos');
+      return;
+    }
+    
     /* Crear nuevo activo */
     const data_to_create: ActivoType = {
       activo: "Nuevo Activo",
-      tipo_activo: "N/A",
+      tipo_activo: "Informacion",
       //nombre_tipo_activo: "N/A",
       valor: 0,
       valoracion: valoracion_activo.split(";")[0],
@@ -239,8 +249,8 @@ const Activos: React.FC = () => {
       integridad: 0,
       disponibilidad: 0,
       trazabilidad: 0,
-      id_propietario: 1,
-      propietario: "N/A",
+      id_propietario: departamento_al_azar.id || departamentos[0].dataValues.id,
+      propietario: departamento_al_azar.nombre,
     }
 
     /* Crear nuevo activo */

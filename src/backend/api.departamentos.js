@@ -16,9 +16,17 @@ ipcMain.handle('departamento:findMany', async () => {
   return await Departamento.findAll();
 });
 
-// Leer departamento por id
 ipcMain.handle('departamento:findUnique', async (event, id) => {
   return await Departamento.findByPk(id);
+});
+
+// Obtener departamento al azar
+ipcMain.handle('departamento:findRandom', async () => {
+  const count = await Departamento.count();
+  if (count === 0) return null;
+  const randomOffset = Math.floor(Math.random() * count);
+  const randomDept = await Departamento.findOne({ offset: randomOffset });
+  return randomDept;
 });
 
 // Actualizar departamento

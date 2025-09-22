@@ -16,3 +16,6 @@ export const actualizarDepartamento = async (id: number, data: any) =>
 
 export const eliminarDepartamento = async (id: number) =>
   await ipcRenderer.invoke('departamento:delete', id);
+
+export const obtenerDepartamentoAlAzar = async () =>
+  await ipcRenderer.invoke('departamento:findRandom');
